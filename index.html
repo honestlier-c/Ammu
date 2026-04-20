@@ -118,6 +118,259 @@
       background: #f5f7ff;
     }
 
+    .option-label.correct {
+      border-color: #15803d;
+      background: #dcfce7;
+      color: #14532d;
+      font-weight: 600;
+    }
+
+    .option-label.wrong {
+      border-color: #dc2626;
+      background: #fee2e2;
+      color: #7f1d1d;
+      font-weight: 600;
+    }
+
+    .option-label.selected {
+      border-color: var(--primary);
+      background: #eef2ff;
+      color: var(--primary-dark);
+      font-weight: 600;
+    }
+
+    .option-label.disabled {
+      cursor: default;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .progress-bar-inner {
+      height: 100%;
+      background: linear-gradient(90deg, #6366f1, #22c55e);
+      width: 0%;
+      transition: width 0.2s ease;
+    }
+
+    .palette {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .palette-btn {
+      padding: 6px 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #fff;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .palette-btn.answered {
+      background: #dcfce7;
+      border-color: #15803d;
+      color: #14532d;
+    }
+
+    .palette-btn.skipped {
+      background: #fee2e2;
+      border-color: #dc2626;
+      color: #7f1d1d;
+    }
+
+    .palette-btn.correct-final {
+      background: #bbf7d0;
+      border-color: #15803d;
+    }
+
+    .palette-btn.wrong-final {
+      background: #fecaca;
+      border-color: #dc2626;
+    }
+
+    .palette-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .palette-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .palette-legend i {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      border: 1px solid var(--border);
+    }
+
+    .palette-legend i.answered { background: #dcfce7; border-color: #15803d; }
+    .palette-legend i.skipped { background: #fee2e2; border-color: #dc2626; }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .modal-backdrop.show {
+      display: flex;
+    }
+
+    .modal {
+      background: #fff;
+      border-radius: 14px;
+      padding: 20px;
+      max-width: 420px;
+      width: calc(100% - 32px);
+      box-shadow: 0 20px 60px rgba(2,6,23,0.3);
+    }
+
+    .modal h3 {
+      margin: 0 0 8px;
+    }
+
+    .modal p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .section-breakdown {
+      margin-top: 14px;
+    }
+
+    .section-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 10px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 6px;
+      font-size: 0.92rem;
+    }
+
+    .section-row strong {
+      color: #1e1b4b;
+    }
+
+    .option-label .tag {
+      float: right;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .option-label.correct .tag {
+      background: #15803d;
+      color: #fff;
+    }
+
+    .option-label.wrong .tag {
+      background: #dc2626;
+      color: #fff;
+    }
+
+    .feedback {
+      margin-top: 10px;
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .feedback.correct {
+      color: #15803d;
+    }
+
+    .feedback.wrong {
+      color: #b91c1c;
+    }
+
+    .feedback.skipped {
+      color: #b45309;
+    }
+
+    .summary-card {
+      margin-top: 16px;
+      padding: 16px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      display: none;
+    }
+
+    .summary-card h3 {
+      margin: 0 0 10px;
+      color: #1e1b4b;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .summary-stat {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .summary-stat .label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .summary-stat .value {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-top: 4px;
+    }
+
+    .summary-stat.correct .value { color: #15803d; }
+    .summary-stat.wrong .value { color: #dc2626; }
+    .summary-stat.skipped .value { color: #b45309; }
+    .summary-stat.score .value { color: var(--primary); }
+
+    @media (max-width: 600px) {
+      .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
     .actions {
       display: flex;
       gap: 10px;
@@ -244,9 +497,10 @@
             <button type="button" id="startMockBtn">Start Full-Length Mock Test (60 Q | 90 min)</button>
             <button type="button" id="practiceAllBtn" class="secondary">Practice All Questions</button>
           </div>
-          <div>
+          <div style="flex: 1; min-width: 220px;">
             <span class="pill">Exam Controls</span>
             <p id="stats" class="meta"></p>
+            <div class="progress-bar"><div id="progressBar" class="progress-bar-inner"></div></div>
           </div>
         </div>
 
@@ -255,14 +509,24 @@
         <div class="actions">
           <button type="button" id="submitBtn">Submit Quiz</button>
           <button type="button" id="resetBtn" class="secondary">Reset</button>
-          <button type="button" id="showAnswersBtn" class="secondary">Show Correct Answers</button>
         </div>
 
         <p id="result"></p>
 
-        <div id="answers">
-          <h3>Correct Answers</h3>
-          <ul id="answerList"></ul>
+        <div id="summary" class="summary-card">
+          <h3>Result Summary</h3>
+          <div class="summary-grid">
+            <div class="summary-stat score"><div class="label">Score</div><div class="value" id="summaryScore">0/0</div></div>
+            <div class="summary-stat correct"><div class="label">Correct</div><div class="value" id="summaryCorrect">0</div></div>
+            <div class="summary-stat wrong"><div class="label">Wrong</div><div class="value" id="summaryWrong">0</div></div>
+            <div class="summary-stat skipped"><div class="label">Skipped</div><div class="value" id="summarySkipped">0</div></div>
+          </div>
+          <p id="summaryMessage" class="meta"></p>
+          <div id="sectionBreakdown" class="section-breakdown"></div>
+          <div class="actions" style="margin-top: 12px;">
+            <button type="button" id="retryMockBtn">Retry Mock Test</button>
+            <button type="button" id="practiceAfterBtn" class="secondary">Practice Mode</button>
+          </div>
         </div>
       </div>
 
@@ -270,7 +534,26 @@
         <span class="pill">Timer</span>
         <div id="timer" class="timer">Time Left: 90:00</div>
         <p id="timerHint" class="meta">Timer runs only while this tab is active.</p>
+
+        <span class="pill" style="margin-top: 14px;">Question Palette</span>
+        <div id="palette" class="palette"></div>
+        <div class="palette-legend">
+          <span><i class="answered"></i> Answered</span>
+          <span><i class="skipped"></i> Skipped</span>
+          <span><i></i> Not visited</span>
+        </div>
       </aside>
+    </div>
+  </div>
+
+  <div id="confirmModal" class="modal-backdrop">
+    <div class="modal">
+      <h3>Submit Quiz?</h3>
+      <p id="confirmMessage">Are you sure you want to submit the test?</p>
+      <div class="modal-actions">
+        <button type="button" id="confirmCancel" class="secondary">Keep Answering</button>
+        <button type="button" id="confirmSubmit">Submit Now</button>
+      </div>
     </div>
   </div>
 
@@ -1932,11 +2215,27 @@
     const result = document.getElementById("result");
     const answerList = document.getElementById("answerList");
     const answersBox = document.getElementById("answers");
+    const hasAnswersBox = !!answersBox;
     const timerEl = document.getElementById("timer");
     const timerHintEl = document.getElementById("timerHint");
     const statsEl = document.getElementById("stats");
     const startMockBtn = document.getElementById("startMockBtn");
     const practiceAllBtn = document.getElementById("practiceAllBtn");
+    const summaryCard = document.getElementById("summary");
+    const summaryScoreEl = document.getElementById("summaryScore");
+    const summaryCorrectEl = document.getElementById("summaryCorrect");
+    const summaryWrongEl = document.getElementById("summaryWrong");
+    const summarySkippedEl = document.getElementById("summarySkipped");
+    const summaryMessageEl = document.getElementById("summaryMessage");
+    const progressBar = document.getElementById("progressBar");
+    const paletteEl = document.getElementById("palette");
+    const sectionBreakdownEl = document.getElementById("sectionBreakdown");
+    const confirmModal = document.getElementById("confirmModal");
+    const confirmMessage = document.getElementById("confirmMessage");
+    const confirmCancel = document.getElementById("confirmCancel");
+    const confirmSubmit = document.getElementById("confirmSubmit");
+    const retryMockBtn = document.getElementById("retryMockBtn");
+    const practiceAfterBtn = document.getElementById("practiceAfterBtn");
 
     const mockConfig = {
       durationMinutes: 90,
@@ -1999,11 +2298,48 @@
     }
 
     function updateStats() {
+      const total = activeQuestions.length;
       const answered = activeQuestions.reduce((count, _, index) => {
         const selected = document.querySelector(`input[name="q${index}"]:checked`);
         return count + (selected ? 1 : 0);
       }, 0);
-      statsEl.textContent = `${isMockMode ? "Mock Mode" : "Practice Mode"} | Answered: ${answered}/${activeQuestions.length}`;
+      statsEl.textContent = `${isMockMode ? "Mock Mode" : "Practice Mode"} | Answered: ${answered}/${total}`;
+      const percent = total === 0 ? 0 : Math.round((answered / total) * 100);
+      progressBar.style.width = `${percent}%`;
+      updatePalette();
+    }
+
+    function updatePalette() {
+      if (!paletteEl) {
+        return;
+      }
+      paletteEl.innerHTML = "";
+      activeQuestions.forEach((_, index) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "palette-btn";
+        btn.textContent = String(index + 1);
+        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+        if (hasSubmitted) {
+          const card = quizForm.querySelector(`[data-qi="${index}"]`);
+          if (card) {
+            if (selected && Number(selected.value) === activeQuestions[index].answer) {
+              btn.classList.add("correct-final");
+            } else {
+              btn.classList.add("wrong-final");
+            }
+          }
+        } else if (selected) {
+          btn.classList.add("answered");
+        }
+        btn.addEventListener("click", () => {
+          const card = quizForm.querySelector(`[data-qi="${index}"]`);
+          if (card) {
+            card.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        });
+        paletteEl.appendChild(btn);
+      });
     }
 
     function stopTimer() {
@@ -2065,8 +2401,8 @@
       quizForm.innerHTML = "";
       result.textContent = "";
       result.className = "";
-      answersBox.style.display = "none";
-      answerList.innerHTML = "";
+      if (answersBox) answersBox.style.display = "none";
+      if (answerList) answerList.innerHTML = "";
       hasSubmitted = false;
 
       let currentSection = "";
@@ -2084,6 +2420,7 @@
 
         const card = document.createElement("div");
         card.className = "question-card";
+        card.dataset.qi = String(index);
 
         const ques = document.createElement("p");
         ques.className = "question";
@@ -2099,13 +2436,24 @@
           const label = document.createElement("label");
           label.className = "option-label";
           label.htmlFor = id;
+          label.dataset.oi = String(optIndex);
 
           const input = document.createElement("input");
           input.type = "radio";
           input.name = `q${index}`;
           input.id = id;
           input.value = optIndex;
-          input.addEventListener("change", updateStats);
+          input.addEventListener("change", () => {
+            if (hasSubmitted) {
+              return;
+            }
+            const parent = label.parentElement;
+            if (parent) {
+              parent.querySelectorAll(".option-label").forEach((l) => l.classList.remove("selected"));
+            }
+            label.classList.add("selected");
+            updateStats();
+          });
 
           label.appendChild(input);
           label.append(" " + opt);
@@ -2113,6 +2461,11 @@
         });
 
         card.appendChild(optWrap);
+
+        const feedback = document.createElement("div");
+        feedback.className = "feedback";
+        card.appendChild(feedback);
+
         quizForm.appendChild(card);
       });
 
@@ -2154,21 +2507,76 @@
         return;
       }
 
-      let score = 0;
+      let correctCount = 0;
+      let wrongCount = 0;
+      let skippedCount = 0;
 
       activeQuestions.forEach((q, index) => {
         const selected = document.querySelector(`input[name="q${index}"]:checked`);
-        if (selected && Number(selected.value) === q.answer) {
-          score += 1;
+        const card = quizForm.querySelector(`[data-qi="${index}"]`);
+        if (!card) {
+          return;
+        }
+
+        const selectedIndex = selected ? Number(selected.value) : null;
+        const feedback = card.querySelector(".feedback");
+
+        q.options.forEach((_, optIndex) => {
+          const label = card.querySelector(`label[data-oi="${optIndex}"]`);
+          if (!label) {
+            return;
+          }
+          label.classList.remove("correct", "wrong");
+          label.classList.add("disabled");
+          const existingTag = label.querySelector(".tag");
+          if (existingTag) {
+            existingTag.remove();
+          }
+
+          const input = label.querySelector("input");
+          if (input) {
+            input.disabled = true;
+          }
+
+          if (optIndex === q.answer) {
+            label.classList.add("correct");
+            const tag = document.createElement("span");
+            tag.className = "tag";
+            tag.textContent = "Correct";
+            label.appendChild(tag);
+          } else if (selectedIndex === optIndex) {
+            label.classList.add("wrong");
+            const tag = document.createElement("span");
+            tag.className = "tag";
+            tag.textContent = "Your Answer";
+            label.appendChild(tag);
+          }
+        });
+
+        if (selectedIndex === null) {
+          skippedCount += 1;
+          if (feedback) {
+            feedback.className = "feedback skipped";
+            feedback.textContent = `Skipped. Correct answer: ${q.options[q.answer]}`;
+          }
+        } else if (selectedIndex === q.answer) {
+          correctCount += 1;
+          if (feedback) {
+            feedback.className = "feedback correct";
+            feedback.textContent = "Correct!";
+          }
+        } else {
+          wrongCount += 1;
+          if (feedback) {
+            feedback.className = "feedback wrong";
+            feedback.textContent = `Wrong. Correct answer: ${q.options[q.answer]}`;
+          }
         }
       });
 
-      const attempted = activeQuestions.reduce((count, _, index) => {
-        const selected = document.querySelector(`input[name="q${index}"]:checked`);
-        return count + (selected ? 1 : 0);
-      }, 0);
-
       const total = activeQuestions.length;
+      const score = correctCount;
+      const attempted = correctCount + wrongCount;
       const percent = ((score / total) * 100).toFixed(1);
       const passMark = Math.ceil(total * 0.6);
       const passed = score >= passMark;
@@ -2176,15 +2584,49 @@
       result.className = passed ? "success" : "danger";
       result.textContent = `${autoSubmitted ? "Time up! " : ""}Your Score: ${score}/${total} (${percent}%) | Attempted: ${attempted}/${total} - ${passed ? "Great work!" : "Keep practicing!"}`;
 
+      summaryScoreEl.textContent = `${score}/${total}`;
+      summaryCorrectEl.textContent = String(correctCount);
+      summaryWrongEl.textContent = String(wrongCount);
+      summarySkippedEl.textContent = String(skippedCount);
+      summaryMessageEl.textContent = `${percent}% score · ${passed ? "Passed (>= 60%)" : "Below pass mark (60%)"}${autoSubmitted ? " · Auto-submitted" : ""}`;
+      summaryCard.style.display = "block";
+
+      const sectionStats = {};
+      activeQuestions.forEach((q, index) => {
+        const sectionName = cleanSectionName(q.section);
+        if (!sectionStats[sectionName]) {
+          sectionStats[sectionName] = { total: 0, correct: 0 };
+        }
+        sectionStats[sectionName].total += 1;
+        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+        if (selected && Number(selected.value) === q.answer) {
+          sectionStats[sectionName].correct += 1;
+        }
+      });
+
+      sectionBreakdownEl.innerHTML = "<h4 style=\"margin:14px 0 8px;color:#1e1b4b;\">Section-wise Breakdown</h4>";
+      Object.keys(sectionStats).forEach((name) => {
+        const s = sectionStats[name];
+        const pct = s.total === 0 ? 0 : Math.round((s.correct / s.total) * 100);
+        const row = document.createElement("div");
+        row.className = "section-row";
+        row.innerHTML = `<span><strong>${name}</strong></span><span>${s.correct}/${s.total} (${pct}%)</span>`;
+        sectionBreakdownEl.appendChild(row);
+      });
+
       hasSubmitted = true;
       stopTimer();
       if (autoSubmitted) {
         timerHintEl.textContent = "Time over. Score has been auto-submitted.";
       }
       updateStats();
+      summaryCard.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
     function showAnswers() {
+      if (!answersBox || !answerList) {
+        return;
+      }
       answerList.innerHTML = "";
       activeQuestions.forEach((q, index) => {
         const item = document.createElement("li");
@@ -2198,15 +2640,68 @@
       quizForm.reset();
       result.textContent = "";
       result.className = "";
-      answersBox.style.display = "none";
-      answerList.innerHTML = "";
+      if (answersBox) answersBox.style.display = "none";
+      if (answerList) answerList.innerHTML = "";
+      summaryCard.style.display = "none";
+      summaryMessageEl.textContent = "";
+      sectionBreakdownEl.innerHTML = "";
+
+      quizForm.querySelectorAll(".option-label").forEach((label) => {
+        label.classList.remove("correct", "wrong", "disabled");
+        const tag = label.querySelector(".tag");
+        if (tag) {
+          tag.remove();
+        }
+        const input = label.querySelector("input");
+        if (input) {
+          input.disabled = false;
+        }
+      });
+
+      quizForm.querySelectorAll(".feedback").forEach((node) => {
+        node.textContent = "";
+        node.className = "feedback";
+      });
+
       hasSubmitted = false;
       updateStats();
     }
 
-    document.getElementById("submitBtn").addEventListener("click", () => calculateScore(false));
-    document.getElementById("showAnswersBtn").addEventListener("click", showAnswers);
+    function requestSubmit() {
+      if (hasSubmitted) {
+        return;
+      }
+      const unanswered = activeQuestions.reduce((count, _, index) => {
+        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+        return count + (selected ? 0 : 1);
+      }, 0);
+      confirmMessage.textContent = unanswered > 0
+        ? `You have ${unanswered} unanswered question${unanswered === 1 ? "" : "s"}. Submit anyway?`
+        : `All ${activeQuestions.length} questions answered. Submit now?`;
+      confirmModal.classList.add("show");
+    }
+
+    function closeConfirm() {
+      confirmModal.classList.remove("show");
+    }
+
+    document.getElementById("submitBtn").addEventListener("click", requestSubmit);
     document.getElementById("resetBtn").addEventListener("click", resetQuiz);
+    confirmCancel.addEventListener("click", closeConfirm);
+    confirmSubmit.addEventListener("click", () => {
+      closeConfirm();
+      calculateScore(false);
+    });
+    retryMockBtn.addEventListener("click", () => {
+      summaryCard.style.display = "none";
+      startMockTest();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+    practiceAfterBtn.addEventListener("click", () => {
+      summaryCard.style.display = "none";
+      startPracticeAll();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
     startMockBtn.addEventListener("click", startMockTest);
     practiceAllBtn.addEventListener("click", startPracticeAll);
     document.addEventListener("visibilitychange", handleVisibilityChange);
