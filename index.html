@@ -498,7 +498,7 @@
 
     .coding-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 14px;
       align-items: start;
     }
@@ -548,6 +548,31 @@
       display: flex;
       gap: 8px;
       margin-top: 8px;
+    }
+
+    .solution-block details {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 10px;
+      background: #f8fafc;
+    }
+
+    .solution-block summary {
+      cursor: pointer;
+      font-weight: 700;
+      color: #1e1b4b;
+    }
+
+    .solution-block pre {
+      margin-top: 10px;
+      background: #0f172a;
+      color: #e2e8f0;
+      border-radius: 8px;
+      padding: 10px;
+      overflow: auto;
+      font-size: 0.84rem;
+      white-space: pre;
     }
 
     @media (max-width: 980px) {
@@ -636,6 +661,215 @@
 
     <div id="codingTab" class="tab-content">
       <div class="coding-grid">
+        <div class="coding-card compiler">
+          <h3>Python Compiler (Practice)</h3>
+          <p class="meta">Write Python code, provide input, and run inside browser.</p>
+          <div class="inline-actions">
+            <select id="templateSelect">
+              <option value="">Load starter template...</option>
+              <option value="range">Range Filtering</option>
+              <option value="selection">Selection Sort</option>
+              <option value="dijkstra">Dijkstra</option>
+              <option value="array">Array - Second Largest</option>
+              <option value="string">String - Palindrome</option>
+            </select>
+            <button type="button" id="loadTemplateBtn" class="secondary">Load</button>
+          </div>
+          <label for="pythonCode"><strong>Code</strong></label>
+          <textarea id="pythonCode">print("Hello Ammu!")</textarea>
+          <label for="pythonInput"><strong>Input (stdin)</strong></label>
+          <textarea id="pythonInput" style="min-height: 90px;" placeholder="Enter input lines here..."></textarea>
+          <div class="inline-actions">
+            <button type="button" id="runPythonBtn">Run Python</button>
+            <button type="button" id="clearPythonBtn" class="secondary">Clear Output</button>
+          </div>
+          <pre id="pythonOutput">Output will appear here...</pre>
+        </div>
+
+        <div class="coding-card solution-block">
+          <h3>Python Solutions (Exam-Ready)</h3>
+          <details>
+            <summary>1) Range Filtering</summary>
+            <pre>def has_repeating_digits(n):
+    s = str(n)
+    return len(set(s)) != len(s)
+
+def is_palindrome(n):
+    s = str(n)
+    return s == s[::-1]
+
+def solve():
+    start = int(input())
+    end = int(input())
+
+    if start > end:
+        print("Invalid range")
+        return
+
+    result = []
+    for i in range(start, end + 1):
+        if (i % 7 == 0 and
+            i % 5 != 0 and
+            not is_palindrome(i) and
+            not has_repeating_digits(i)):
+            result.append(i)
+
+    if result:
+        print(*result)
+    else:
+        print("No numbers found")
+
+solve()</pre>
+          </details>
+
+          <details>
+            <summary>2) Task Sorting / Priority Scheduling</summary>
+            <pre>def solve():
+    n = int(input())
+    tasks = []
+
+    for _ in range(n):
+        priority, time = map(int, input().split())
+        tasks.append((priority, time))
+
+    tasks.sort()
+
+    for p, t in tasks:
+        print(p, t)
+
+solve()</pre>
+          </details>
+
+          <details>
+            <summary>3) Selection Sort</summary>
+            <pre>def selection_sort(arr):
+    n = len(arr)
+    for i in range(n):
+        min_idx = i
+        for j in range(i + 1, n):
+            if arr[j] < arr[min_idx]:
+                min_idx = j
+        arr[i], arr[min_idx] = arr[min_idx], arr[i]
+    return arr
+
+def solve():
+    n = int(input())
+    arr = list(map(int, input().split()))
+    sorted_arr = selection_sort(arr)
+    print(*sorted_arr)
+
+solve()</pre>
+          </details>
+
+          <details>
+            <summary>4) Dijkstra (Advanced)</summary>
+            <pre>import heapq
+
+def dijkstra(n, graph, start):
+    dist = [float('inf')] * n
+    dist[start] = 0
+    pq = [(0, start)]
+
+    while pq:
+        curr_dist, node = heapq.heappop(pq)
+        if curr_dist > dist[node]:
+            continue
+        for neighbor, weight in graph[node]:
+            if dist[node] + weight < dist[neighbor]:
+                dist[neighbor] = dist[node] + weight
+                heapq.heappush(pq, (dist[neighbor], neighbor))
+    return dist
+
+def solve():
+    n, e = map(int, input().split())
+    graph = [[] for _ in range(n)]
+    for _ in range(e):
+        u, v, w = map(int, input().split())
+        graph[u].append((v, w))
+        graph[v].append((u, w))
+    start = int(input())
+    result = dijkstra(n, graph, start)
+    print(*result)
+
+solve()</pre>
+          </details>
+
+          <details>
+            <summary>5) Array-Based (Second Largest)</summary>
+            <pre>def solve():
+    n = int(input())
+    arr = list(map(int, input().split()))
+
+    unique = list(set(arr))
+    unique.sort()
+
+    if len(unique) < 2:
+        print("No second largest")
+    else:
+        print(unique[-2])
+
+solve()</pre>
+          </details>
+
+          <details>
+            <summary>6) String-Based (Palindrome + Reverse Words)</summary>
+            <pre>def solve():
+    s = input().strip()
+
+    if s == s[::-1]:
+        print("Palindrome")
+    else:
+        print("Not Palindrome")
+
+    words = s.split()
+    print(" ".join(words[::-1]))
+
+solve()</pre>
+          </details>
+
+          <details>
+            <summary>7) Recursion (Fibonacci + Iterative DP)</summary>
+            <pre>def fib(n):
+    if n <= 1:
+        return n
+    return fib(n - 1) + fib(n - 2)
+
+def solve():
+    n = int(input())
+    print(fib(n))
+
+solve()
+
+# Better exam version (iterative):
+def solve_fast():
+    n = int(input())
+    a, b = 0, 1
+    for _ in range(n):
+        a, b = b, a + b
+    print(a)</pre>
+          </details>
+
+          <details>
+            <summary>8) Number-Based (Prime Check)</summary>
+            <pre>def is_prime(n):
+    if n < 2:
+        return False
+    for i in range(2, int(n**0.5) + 1):
+        if n % i == 0:
+            return False
+    return True
+
+def solve():
+    n = int(input())
+    if is_prime(n):
+        print("Prime")
+    else:
+        print("Not Prime")
+
+solve()</pre>
+          </details>
+        </div>
+
         <div>
           <div class="coding-card">
             <h3>Top Coding Questions (2026 pattern)</h3>
@@ -661,20 +895,6 @@
               <li>Need to pass most test cases for selection chance.</li>
             </ul>
           </div>
-        </div>
-
-        <div class="coding-card compiler">
-          <h3>Python Compiler (Practice)</h3>
-          <p class="meta">Write Python code, provide input, and run inside browser.</p>
-          <label for="pythonCode"><strong>Code</strong></label>
-          <textarea id="pythonCode">print("Hello Ammu!")</textarea>
-          <label for="pythonInput"><strong>Input (stdin)</strong></label>
-          <textarea id="pythonInput" style="min-height: 90px;" placeholder="Enter input lines here..."></textarea>
-          <div class="inline-actions">
-            <button type="button" id="runPythonBtn">Run Python</button>
-            <button type="button" id="clearPythonBtn" class="secondary">Clear Output</button>
-          </div>
-          <pre id="pythonOutput">Output will appear here...</pre>
         </div>
       </div>
     </div>
@@ -2379,6 +2599,8 @@
     const pythonCode = document.getElementById("pythonCode");
     const pythonInput = document.getElementById("pythonInput");
     const pythonOutput = document.getElementById("pythonOutput");
+    const templateSelect = document.getElementById("templateSelect");
+    const loadTemplateBtn = document.getElementById("loadTemplateBtn");
 
     const mockConfig = {
       durationMinutes: 90,
@@ -2394,6 +2616,13 @@
     let hasSubmitted = false;
     let isTimerPaused = false;
     let pyodide = null;
+    const pythonTemplates = {
+      range: `start = int(input().strip())\nend = int(input().strip())\n\nif start > end:\n    print(\"Invalid range\")\nelse:\n    out = []\n    for n in range(start, end + 1):\n        s = str(n)\n        if n % 7 == 0 and n % 5 != 0 and s != s[::-1] and len(set(s)) == len(s):\n            out.append(str(n))\n    print(\" \".join(out) if out else \"No numbers found\")\n`,
+      selection: `arr = list(map(int, input().split()))\n\nfor i in range(len(arr)):\n    mi = i\n    for j in range(i + 1, len(arr)):\n        if arr[j] < arr[mi]:\n            mi = j\n    arr[i], arr[mi] = arr[mi], arr[i]\n\nprint(*arr)\n`,
+      dijkstra: `import heapq\n\nn, m = map(int, input().split())\ng = [[] for _ in range(n + 1)]\nfor _ in range(m):\n    u, v, w = map(int, input().split())\n    g[u].append((v, w))\n    g[v].append((u, w))\nsrc = int(input().strip())\n\ndist = [10**18] * (n + 1)\ndist[src] = 0\npq = [(0, src)]\n\nwhile pq:\n    d, u = heapq.heappop(pq)\n    if d != dist[u]:\n        continue\n    for v, w in g[u]:\n        nd = d + w\n        if nd < dist[v]:\n            dist[v] = nd\n            heapq.heappush(pq, (nd, v))\n\nprint(*[x if x < 10**18 else -1 for x in dist[1:]])\n`,
+      array: `arr = list(map(int, input().split()))\nuniq = sorted(set(arr))\nprint(uniq[-2] if len(uniq) >= 2 else \"Not possible\")\n`,
+      string: `s = input().strip()\nprint(\"Palindrome\" if s == s[::-1] else \"Not Palindrome\")\n`
+    };
 
     function shuffle(list) {
       const arr = [...list];
@@ -2924,6 +3153,14 @@ _result
     runPythonBtn.addEventListener("click", runPythonCode);
     clearPythonBtn.addEventListener("click", () => {
       pythonOutput.textContent = "Output will appear here...";
+    });
+    loadTemplateBtn.addEventListener("click", () => {
+      const key = templateSelect.value;
+      if (!key || !pythonTemplates[key]) {
+        return;
+      }
+      pythonCode.value = pythonTemplates[key];
+      pythonOutput.textContent = `Loaded template: ${templateSelect.options[templateSelect.selectedIndex].text}`;
     });
     startMockBtn.addEventListener("click", startMockTest);
     practiceAllBtn.addEventListener("click", startPracticeAll);
