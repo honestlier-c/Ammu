@@ -55,6 +55,36 @@
       opacity: 0.95;
     }
 
+    .tab-nav {
+      display: flex;
+      gap: 10px;
+      margin: 12px 0;
+    }
+
+    .tab-btn {
+      border: 1px solid var(--border);
+      background: #fff;
+      color: #1e1b4b;
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
     .layout {
       display: grid;
       grid-template-columns: 1fr 290px;
@@ -282,6 +312,39 @@
       color: #1e1b4b;
     }
 
+    .coding-wrapper {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    .coding-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .coding-card h3 {
+      margin: 0;
+      padding: 10px 12px;
+      background: #eef2ff;
+      color: #1e1b4b;
+      font-size: 1rem;
+    }
+
+    .coding-card pre {
+      margin: 0;
+      padding: 12px;
+      background: #0f172a;
+      color: #e2e8f0;
+      overflow-x: auto;
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+
     .option-label .tag {
       float: right;
       font-size: 0.75rem;
@@ -472,109 +535,6 @@
       margin-bottom: 8px;
     }
 
-    .tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .tab-btn {
-      background: #e2e8f0;
-      color: #1e293b;
-    }
-
-    .tab-btn.active {
-      background: var(--primary);
-      color: #fff;
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    .coding-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
-      align-items: start;
-    }
-
-    .coding-card {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px;
-      box-shadow: var(--shadow);
-      margin-bottom: 12px;
-    }
-
-    .coding-card h3 {
-      margin: 0 0 8px;
-      color: #1e1b4b;
-    }
-
-    .coding-card p, .coding-card li {
-      color: #334155;
-      font-size: 0.93rem;
-    }
-
-    .compiler textarea {
-      width: 100%;
-      min-height: 150px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 0.9rem;
-      resize: vertical;
-    }
-
-    .compiler pre {
-      background: #0f172a;
-      color: #e2e8f0;
-      border-radius: 8px;
-      padding: 10px;
-      min-height: 110px;
-      overflow: auto;
-      margin: 8px 0 0;
-      font-size: 0.85rem;
-    }
-
-    .inline-actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .solution-block details {
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px;
-      margin-bottom: 10px;
-      background: #f8fafc;
-    }
-
-    .solution-block summary {
-      cursor: pointer;
-      font-weight: 700;
-      color: #1e1b4b;
-    }
-
-    .solution-block pre {
-      margin-top: 10px;
-      background: #0f172a;
-      color: #e2e8f0;
-      border-radius: 8px;
-      padding: 10px;
-      overflow: auto;
-      font-size: 0.84rem;
-      white-space: pre;
-    }
-
     @media (max-width: 980px) {
       .layout {
         grid-template-columns: 1fr;
@@ -582,10 +542,6 @@
 
       .side-panel {
         position: static;
-      }
-
-      .coding-grid {
-        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -597,7 +553,7 @@
       <p>Full-length TCS-style mock test with timer + all practice sets.</p>
     </div>
 
-    <div class="tabs">
+    <div class="tab-nav">
       <button type="button" id="quizTabBtn" class="tab-btn active">Quiz</button>
       <button type="button" id="codingTabBtn" class="tab-btn">Coding</button>
     </div>
@@ -660,37 +616,13 @@
     </div>
 
     <div id="codingTab" class="tab-content">
-      <div class="coding-grid">
-        <div class="coding-card compiler">
-          <h3>Python Compiler (Practice)</h3>
-          <p class="meta">Write Python code, provide input, and run inside browser.</p>
-          <div class="inline-actions">
-            <select id="templateSelect">
-              <option value="">Load starter template...</option>
-              <option value="range">Range Filtering</option>
-              <option value="selection">Selection Sort</option>
-              <option value="dijkstra">Dijkstra</option>
-              <option value="array">Array - Second Largest</option>
-              <option value="string">String - Palindrome</option>
-            </select>
-            <button type="button" id="loadTemplateBtn" class="secondary">Load</button>
-          </div>
-          <label for="pythonCode"><strong>Code</strong></label>
-          <textarea id="pythonCode">print("Hello Ammu!")</textarea>
-          <label for="pythonInput"><strong>Input (stdin)</strong></label>
-          <textarea id="pythonInput" style="min-height: 90px;" placeholder="Enter input lines here..."></textarea>
-          <div class="inline-actions">
-            <button type="button" id="runPythonBtn">Run Python</button>
-            <button type="button" id="clearPythonBtn" class="secondary">Clear Output</button>
-          </div>
-          <pre id="pythonOutput">Output will appear here...</pre>
-        </div>
+      <div class="coding-wrapper">
+        <h2 style="margin-top:0;">TCS NQT Coding Patterns (Exam-Ready Python)</h2>
+        <p class="meta" style="margin:0 0 12px;">Clean implementations for quick revision and practice.</p>
 
-        <div class="coding-card solution-block">
-          <h3>Python Solutions (Exam-Ready)</h3>
-          <details>
-            <summary>1) Range Filtering</summary>
-            <pre>def has_repeating_digits(n):
+        <div class="coding-card">
+          <h3>1) Range Filtering Problem</h3>
+          <pre>def has_repeating_digits(n):
     s = str(n)
     return len(set(s)) != len(s)
 
@@ -701,48 +633,39 @@ def is_palindrome(n):
 def solve():
     start = int(input())
     end = int(input())
-
     if start > end:
         print("Invalid range")
         return
 
     result = []
     for i in range(start, end + 1):
-        if (i % 7 == 0 and
-            i % 5 != 0 and
-            not is_palindrome(i) and
-            not has_repeating_digits(i)):
+        if i % 7 == 0 and i % 5 != 0 and not is_palindrome(i) and not has_repeating_digits(i):
             result.append(i)
 
-    if result:
-        print(*result)
-    else:
-        print("No numbers found")
+    print(*result) if result else print("No numbers found")
 
 solve()</pre>
-          </details>
+        </div>
 
-          <details>
-            <summary>2) Task Sorting / Priority Scheduling</summary>
-            <pre>def solve():
+        <div class="coding-card">
+          <h3>2) Task Sorting / Priority Scheduling</h3>
+          <pre>def solve():
     n = int(input())
     tasks = []
-
     for _ in range(n):
         priority, time = map(int, input().split())
         tasks.append((priority, time))
 
     tasks.sort()
-
     for p, t in tasks:
         print(p, t)
 
 solve()</pre>
-          </details>
+        </div>
 
-          <details>
-            <summary>3) Selection Sort</summary>
-            <pre>def selection_sort(arr):
+        <div class="coding-card">
+          <h3>3) Selection Sort</h3>
+          <pre>def selection_sort(arr):
     n = len(arr)
     for i in range(n):
         min_idx = i
@@ -755,15 +678,14 @@ solve()</pre>
 def solve():
     n = int(input())
     arr = list(map(int, input().split()))
-    sorted_arr = selection_sort(arr)
-    print(*sorted_arr)
+    print(*selection_sort(arr))
 
 solve()</pre>
-          </details>
+        </div>
 
-          <details>
-            <summary>4) Dijkstra (Advanced)</summary>
-            <pre>import heapq
+        <div class="coding-card">
+          <h3>4) Dijkstra's Algorithm</h3>
+          <pre>import heapq
 
 def dijkstra(n, graph, start):
     dist = [float('inf')] * n
@@ -788,70 +710,51 @@ def solve():
         graph[u].append((v, w))
         graph[v].append((u, w))
     start = int(input())
-    result = dijkstra(n, graph, start)
-    print(*result)
+    print(*dijkstra(n, graph, start))
 
 solve()</pre>
-          </details>
+        </div>
 
-          <details>
-            <summary>5) Array-Based (Second Largest)</summary>
-            <pre>def solve():
+        <div class="coding-card">
+          <h3>5) Second Largest Element</h3>
+          <pre>def solve():
     n = int(input())
     arr = list(map(int, input().split()))
-
-    unique = list(set(arr))
-    unique.sort()
-
+    unique = sorted(set(arr))
     if len(unique) < 2:
         print("No second largest")
     else:
         print(unique[-2])
 
 solve()</pre>
-          </details>
+        </div>
 
-          <details>
-            <summary>6) String-Based (Palindrome + Reverse Words)</summary>
-            <pre>def solve():
+        <div class="coding-card">
+          <h3>6) String: Palindrome + Reverse Words</h3>
+          <pre>def solve():
     s = input().strip()
-
-    if s == s[::-1]:
-        print("Palindrome")
-    else:
-        print("Not Palindrome")
-
+    print("Palindrome" if s == s[::-1] else "Not Palindrome")
     words = s.split()
     print(" ".join(words[::-1]))
 
 solve()</pre>
-          </details>
+        </div>
 
-          <details>
-            <summary>7) Recursion (Fibonacci + Iterative DP)</summary>
-            <pre>def fib(n):
-    if n <= 1:
-        return n
-    return fib(n - 1) + fib(n - 2)
-
-def solve():
-    n = int(input())
-    print(fib(n))
-
-solve()
-
-# Better exam version (iterative):
-def solve_fast():
+        <div class="coding-card">
+          <h3>7) Fibonacci (Iterative)</h3>
+          <pre>def solve():
     n = int(input())
     a, b = 0, 1
     for _ in range(n):
         a, b = b, a + b
-    print(a)</pre>
-          </details>
+    print(a)
 
-          <details>
-            <summary>8) Number-Based (Prime Check)</summary>
-            <pre>def is_prime(n):
+solve()</pre>
+        </div>
+
+        <div class="coding-card">
+          <h3>8) Prime Check</h3>
+          <pre>def is_prime(n):
     if n < 2:
         return False
     for i in range(2, int(n**0.5) + 1):
@@ -861,40 +764,9 @@ def solve_fast():
 
 def solve():
     n = int(input())
-    if is_prime(n):
-        print("Prime")
-    else:
-        print("Not Prime")
+    print("Prime" if is_prime(n) else "Not Prime")
 
 solve()</pre>
-          </details>
-        </div>
-
-        <div>
-          <div class="coding-card">
-            <h3>Top Coding Questions (2026 pattern)</h3>
-            <ol>
-              <li><strong>Range Filtering:</strong> divisible by 7, not divisible by 5, not palindrome, no repeating digits.</li>
-              <li><strong>Task Sorting / Priority Scheduling:</strong> sort tasks by ascending priority.</li>
-              <li><strong>Selection Sort:</strong> implement and print sorted array.</li>
-              <li><strong>Dijkstra (Advanced):</strong> shortest path in weighted graph.</li>
-              <li><strong>Array Logic:</strong> second largest, remove duplicates, reverse.</li>
-              <li><strong>String Logic:</strong> palindrome, reverse words, vowel/consonant count.</li>
-              <li><strong>Recursion / Backtracking:</strong> Fibonacci, subsets, permutations.</li>
-              <li><strong>Number Problems:</strong> prime, Armstrong, series sum.</li>
-            </ol>
-          </div>
-
-          <div class="coding-card">
-            <h3>Real Exam Pattern (2026)</h3>
-            <ul>
-              <li>2 coding questions total.</li>
-              <li>Q1: Easy (~25 marks, ~30 mins).</li>
-              <li>Q2: Medium (~50 marks, ~45-60 mins).</li>
-              <li>Hidden test cases are used in evaluation.</li>
-              <li>Need to pass most test cases for selection chance.</li>
-            </ul>
-          </div>
         </div>
       </div>
     </div>
@@ -2594,13 +2466,6 @@ solve()</pre>
     const codingTabBtn = document.getElementById("codingTabBtn");
     const quizTab = document.getElementById("quizTab");
     const codingTab = document.getElementById("codingTab");
-    const runPythonBtn = document.getElementById("runPythonBtn");
-    const clearPythonBtn = document.getElementById("clearPythonBtn");
-    const pythonCode = document.getElementById("pythonCode");
-    const pythonInput = document.getElementById("pythonInput");
-    const pythonOutput = document.getElementById("pythonOutput");
-    const templateSelect = document.getElementById("templateSelect");
-    const loadTemplateBtn = document.getElementById("loadTemplateBtn");
 
     const mockConfig = {
       durationMinutes: 90,
@@ -2615,14 +2480,6 @@ solve()</pre>
     let isMockMode = false;
     let hasSubmitted = false;
     let isTimerPaused = false;
-    let pyodide = null;
-    const pythonTemplates = {
-      range: `start = int(input().strip())\nend = int(input().strip())\n\nif start > end:\n    print(\"Invalid range\")\nelse:\n    out = []\n    for n in range(start, end + 1):\n        s = str(n)\n        if n % 7 == 0 and n % 5 != 0 and s != s[::-1] and len(set(s)) == len(s):\n            out.append(str(n))\n    print(\" \".join(out) if out else \"No numbers found\")\n`,
-      selection: `arr = list(map(int, input().split()))\n\nfor i in range(len(arr)):\n    mi = i\n    for j in range(i + 1, len(arr)):\n        if arr[j] < arr[mi]:\n            mi = j\n    arr[i], arr[mi] = arr[mi], arr[i]\n\nprint(*arr)\n`,
-      dijkstra: `import heapq\n\nn, m = map(int, input().split())\ng = [[] for _ in range(n + 1)]\nfor _ in range(m):\n    u, v, w = map(int, input().split())\n    g[u].append((v, w))\n    g[v].append((u, w))\nsrc = int(input().strip())\n\ndist = [10**18] * (n + 1)\ndist[src] = 0\npq = [(0, src)]\n\nwhile pq:\n    d, u = heapq.heappop(pq)\n    if d != dist[u]:\n        continue\n    for v, w in g[u]:\n        nd = d + w\n        if nd < dist[v]:\n            dist[v] = nd\n            heapq.heappush(pq, (nd, v))\n\nprint(*[x if x < 10**18 else -1 for x in dist[1:]])\n`,
-      array: `arr = list(map(int, input().split()))\nuniq = sorted(set(arr))\nprint(uniq[-2] if len(uniq) >= 2 else \"Not possible\")\n`,
-      string: `s = input().strip()\nprint(\"Palindrome\" if s == s[::-1] else \"Not Palindrome\")\n`
-    };
 
     function shuffle(list) {
       const arr = [...list];
@@ -3058,76 +2915,23 @@ solve()</pre>
       confirmModal.classList.remove("show");
     }
 
-    function openTab(tabName) {
-      const isQuiz = tabName === "quiz";
-      quizTab.classList.toggle("active", isQuiz);
-      codingTab.classList.toggle("active", !isQuiz);
-      quizTabBtn.classList.toggle("active", isQuiz);
-      codingTabBtn.classList.toggle("active", !isQuiz);
+    function showQuizTab() {
+      quizTab.classList.add("active");
+      codingTab.classList.remove("active");
+      quizTabBtn.classList.add("active");
+      codingTabBtn.classList.remove("active");
+      if (isMockMode && !hasSubmitted) {
+        resumeTimer();
+      }
     }
 
-    async function ensurePyodideLoaded() {
-      if (pyodide) {
-        return pyodide;
-      }
-
-      if (!window.loadPyodide) {
-        const script = document.createElement("script");
-        script.src = "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js";
-        script.async = true;
-        pythonOutput.textContent = "Loading Python runtime...";
-        await new Promise((resolve, reject) => {
-          script.onload = resolve;
-          script.onerror = reject;
-          document.head.appendChild(script);
-        });
-      }
-
-      pythonOutput.textContent = "Initializing Python...";
-      pyodide = await window.loadPyodide();
-      return pyodide;
-    }
-
-    async function runPythonCode() {
-      try {
-        runPythonBtn.disabled = true;
-        pythonOutput.textContent = "Running...";
-        const py = await ensurePyodideLoaded();
-        const code = pythonCode.value || "";
-        const stdin = pythonInput.value || "";
-
-        py.globals.set("USER_CODE", code);
-        py.globals.set("USER_STDIN", stdin);
-
-        const result = await py.runPythonAsync(`
-import io, sys, traceback
-from js import USER_CODE, USER_STDIN
-
-_in = io.StringIO(USER_STDIN)
-_out = io.StringIO()
-_err = io.StringIO()
-
-old_stdin, old_stdout, old_stderr = sys.stdin, sys.stdout, sys.stderr
-sys.stdin, sys.stdout, sys.stderr = _in, _out, _err
-
-try:
-    exec(USER_CODE, {})
-    _result = _out.getvalue()
-    if _err.getvalue():
-        _result += "\\n[stderr]\\n" + _err.getvalue()
-except Exception:
-    _result = traceback.format_exc()
-finally:
-    sys.stdin, sys.stdout, sys.stderr = old_stdin, old_stdout, old_stderr
-
-_result
-        `);
-
-        pythonOutput.textContent = result && String(result).trim() ? String(result) : "(No output)";
-      } catch (error) {
-        pythonOutput.textContent = `Error: ${error.message}`;
-      } finally {
-        runPythonBtn.disabled = false;
+    function showCodingTab() {
+      codingTab.classList.add("active");
+      quizTab.classList.remove("active");
+      codingTabBtn.classList.add("active");
+      quizTabBtn.classList.remove("active");
+      if (isMockMode && !hasSubmitted) {
+        pauseTimer();
       }
     }
 
@@ -3148,20 +2952,8 @@ _result
       startPracticeAll();
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
-    quizTabBtn.addEventListener("click", () => openTab("quiz"));
-    codingTabBtn.addEventListener("click", () => openTab("coding"));
-    runPythonBtn.addEventListener("click", runPythonCode);
-    clearPythonBtn.addEventListener("click", () => {
-      pythonOutput.textContent = "Output will appear here...";
-    });
-    loadTemplateBtn.addEventListener("click", () => {
-      const key = templateSelect.value;
-      if (!key || !pythonTemplates[key]) {
-        return;
-      }
-      pythonCode.value = pythonTemplates[key];
-      pythonOutput.textContent = `Loaded template: ${templateSelect.options[templateSelect.selectedIndex].text}`;
-    });
+    quizTabBtn.addEventListener("click", showQuizTab);
+    codingTabBtn.addEventListener("click", showCodingTab);
     startMockBtn.addEventListener("click", startMockTest);
     practiceAllBtn.addEventListener("click", startPracticeAll);
     document.addEventListener("visibilitychange", handleVisibilityChange);
