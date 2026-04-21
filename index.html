@@ -472,6 +472,84 @@
       margin-bottom: 8px;
     }
 
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .tab-btn {
+      background: #e2e8f0;
+      color: #1e293b;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .coding-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .coding-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: var(--shadow);
+      margin-bottom: 12px;
+    }
+
+    .coding-card h3 {
+      margin: 0 0 8px;
+      color: #1e1b4b;
+    }
+
+    .coding-card p, .coding-card li {
+      color: #334155;
+      font-size: 0.93rem;
+    }
+
+    .compiler textarea {
+      width: 100%;
+      min-height: 150px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.9rem;
+      resize: vertical;
+    }
+
+    .compiler pre {
+      background: #0f172a;
+      color: #e2e8f0;
+      border-radius: 8px;
+      padding: 10px;
+      min-height: 110px;
+      overflow: auto;
+      margin: 8px 0 0;
+      font-size: 0.85rem;
+    }
+
+    .inline-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
     @media (max-width: 980px) {
       .layout {
         grid-template-columns: 1fr;
@@ -479,6 +557,10 @@
 
       .side-panel {
         position: static;
+      }
+
+      .coding-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -490,6 +572,12 @@
       <p>Full-length TCS-style mock test with timer + all practice sets.</p>
     </div>
 
+    <div class="tabs">
+      <button type="button" id="quizTabBtn" class="tab-btn active">Quiz</button>
+      <button type="button" id="codingTabBtn" class="tab-btn">Coding</button>
+    </div>
+
+    <div id="quizTab" class="tab-content active">
     <div class="layout">
       <div class="main-panel">
         <div class="top-controls">
@@ -543,6 +631,52 @@
           <span><i></i> Not visited</span>
         </div>
       </aside>
+    </div>
+    </div>
+
+    <div id="codingTab" class="tab-content">
+      <div class="coding-grid">
+        <div>
+          <div class="coding-card">
+            <h3>Top Coding Questions (2026 pattern)</h3>
+            <ol>
+              <li><strong>Range Filtering:</strong> divisible by 7, not divisible by 5, not palindrome, no repeating digits.</li>
+              <li><strong>Task Sorting / Priority Scheduling:</strong> sort tasks by ascending priority.</li>
+              <li><strong>Selection Sort:</strong> implement and print sorted array.</li>
+              <li><strong>Dijkstra (Advanced):</strong> shortest path in weighted graph.</li>
+              <li><strong>Array Logic:</strong> second largest, remove duplicates, reverse.</li>
+              <li><strong>String Logic:</strong> palindrome, reverse words, vowel/consonant count.</li>
+              <li><strong>Recursion / Backtracking:</strong> Fibonacci, subsets, permutations.</li>
+              <li><strong>Number Problems:</strong> prime, Armstrong, series sum.</li>
+            </ol>
+          </div>
+
+          <div class="coding-card">
+            <h3>Real Exam Pattern (2026)</h3>
+            <ul>
+              <li>2 coding questions total.</li>
+              <li>Q1: Easy (~25 marks, ~30 mins).</li>
+              <li>Q2: Medium (~50 marks, ~45-60 mins).</li>
+              <li>Hidden test cases are used in evaluation.</li>
+              <li>Need to pass most test cases for selection chance.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="coding-card compiler">
+          <h3>Python Compiler (Practice)</h3>
+          <p class="meta">Write Python code, provide input, and run inside browser.</p>
+          <label for="pythonCode"><strong>Code</strong></label>
+          <textarea id="pythonCode">print("Hello Ammu!")</textarea>
+          <label for="pythonInput"><strong>Input (stdin)</strong></label>
+          <textarea id="pythonInput" style="min-height: 90px;" placeholder="Enter input lines here..."></textarea>
+          <div class="inline-actions">
+            <button type="button" id="runPythonBtn">Run Python</button>
+            <button type="button" id="clearPythonBtn" class="secondary">Clear Output</button>
+          </div>
+          <pre id="pythonOutput">Output will appear here...</pre>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -2236,6 +2370,15 @@
     const confirmSubmit = document.getElementById("confirmSubmit");
     const retryMockBtn = document.getElementById("retryMockBtn");
     const practiceAfterBtn = document.getElementById("practiceAfterBtn");
+    const quizTabBtn = document.getElementById("quizTabBtn");
+    const codingTabBtn = document.getElementById("codingTabBtn");
+    const quizTab = document.getElementById("quizTab");
+    const codingTab = document.getElementById("codingTab");
+    const runPythonBtn = document.getElementById("runPythonBtn");
+    const clearPythonBtn = document.getElementById("clearPythonBtn");
+    const pythonCode = document.getElementById("pythonCode");
+    const pythonInput = document.getElementById("pythonInput");
+    const pythonOutput = document.getElementById("pythonOutput");
 
     const mockConfig = {
       durationMinutes: 90,
@@ -2250,6 +2393,7 @@
     let isMockMode = false;
     let hasSubmitted = false;
     let isTimerPaused = false;
+    let pyodide = null;
 
     function shuffle(list) {
       const arr = [...list];
@@ -2685,6 +2829,79 @@
       confirmModal.classList.remove("show");
     }
 
+    function openTab(tabName) {
+      const isQuiz = tabName === "quiz";
+      quizTab.classList.toggle("active", isQuiz);
+      codingTab.classList.toggle("active", !isQuiz);
+      quizTabBtn.classList.toggle("active", isQuiz);
+      codingTabBtn.classList.toggle("active", !isQuiz);
+    }
+
+    async function ensurePyodideLoaded() {
+      if (pyodide) {
+        return pyodide;
+      }
+
+      if (!window.loadPyodide) {
+        const script = document.createElement("script");
+        script.src = "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js";
+        script.async = true;
+        pythonOutput.textContent = "Loading Python runtime...";
+        await new Promise((resolve, reject) => {
+          script.onload = resolve;
+          script.onerror = reject;
+          document.head.appendChild(script);
+        });
+      }
+
+      pythonOutput.textContent = "Initializing Python...";
+      pyodide = await window.loadPyodide();
+      return pyodide;
+    }
+
+    async function runPythonCode() {
+      try {
+        runPythonBtn.disabled = true;
+        pythonOutput.textContent = "Running...";
+        const py = await ensurePyodideLoaded();
+        const code = pythonCode.value || "";
+        const stdin = pythonInput.value || "";
+
+        py.globals.set("USER_CODE", code);
+        py.globals.set("USER_STDIN", stdin);
+
+        const result = await py.runPythonAsync(`
+import io, sys, traceback
+from js import USER_CODE, USER_STDIN
+
+_in = io.StringIO(USER_STDIN)
+_out = io.StringIO()
+_err = io.StringIO()
+
+old_stdin, old_stdout, old_stderr = sys.stdin, sys.stdout, sys.stderr
+sys.stdin, sys.stdout, sys.stderr = _in, _out, _err
+
+try:
+    exec(USER_CODE, {})
+    _result = _out.getvalue()
+    if _err.getvalue():
+        _result += "\\n[stderr]\\n" + _err.getvalue()
+except Exception:
+    _result = traceback.format_exc()
+finally:
+    sys.stdin, sys.stdout, sys.stderr = old_stdin, old_stdout, old_stderr
+
+_result
+        `);
+
+        pythonOutput.textContent = result && String(result).trim() ? String(result) : "(No output)";
+      } catch (error) {
+        pythonOutput.textContent = `Error: ${error.message}`;
+      } finally {
+        runPythonBtn.disabled = false;
+      }
+    }
+
     document.getElementById("submitBtn").addEventListener("click", requestSubmit);
     document.getElementById("resetBtn").addEventListener("click", resetQuiz);
     confirmCancel.addEventListener("click", closeConfirm);
@@ -2701,6 +2918,12 @@
       summaryCard.style.display = "none";
       startPracticeAll();
       window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+    quizTabBtn.addEventListener("click", () => openTab("quiz"));
+    codingTabBtn.addEventListener("click", () => openTab("coding"));
+    runPythonBtn.addEventListener("click", runPythonCode);
+    clearPythonBtn.addEventListener("click", () => {
+      pythonOutput.textContent = "Output will appear here...";
     });
     startMockBtn.addEventListener("click", startMockTest);
     practiceAllBtn.addEventListener("click", startPracticeAll);
