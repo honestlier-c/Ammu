@@ -335,6 +335,24 @@
       font-size: 1rem;
     }
 
+    .coding-card .problem {
+      padding: 12px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: #f8fafc;
+      color: #1e293b;
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
+    .coding-card .problem p {
+      margin: 0 0 8px;
+    }
+
+    .coding-card .problem p:last-child {
+      margin-bottom: 0;
+    }
+
     .coding-card pre {
       margin: 0;
       padding: 12px;
@@ -621,7 +639,13 @@
         <p class="meta" style="margin:0 0 12px;">Clean implementations for quick revision and practice.</p>
 
         <div class="coding-card">
-          <h3>1) Range Filtering Problem</h3>
+          <h3>1) Range Filtering (Real Question Type)</h3>
+          <div class="problem">
+            <p><strong>Problem:</strong> Given two numbers <code>start</code> and <code>end</code>, print all numbers such that:</p>
+            <p>- Divisible by 7<br>- Not divisible by 5<br>- Not palindrome<br>- No repeating digits</p>
+            <p>If invalid range, print <code>Invalid range</code>.</p>
+            <p>Common in recent TCS TAG/NQT assessments.</p>
+          </div>
           <pre>def has_repeating_digits(n):
     s = str(n)
     return len(set(s)) != len(s)
@@ -649,6 +673,10 @@ solve()</pre>
 
         <div class="coding-card">
           <h3>2) Task Sorting / Priority Scheduling</h3>
+          <div class="problem">
+            <p><strong>Problem:</strong> Given <code>n</code> tasks, each with priority and completion time, sort tasks by priority (ascending).</p>
+            <p>Reported in recent 2026 shift discussions.</p>
+          </div>
           <pre>def solve():
     n = int(input())
     tasks = []
@@ -665,6 +693,10 @@ solve()</pre>
 
         <div class="coding-card">
           <h3>3) Selection Sort</h3>
+          <div class="problem">
+            <p><strong>Problem:</strong> Implement Selection Sort and print the sorted array.</p>
+            <p>Common easy 25-mark category question.</p>
+          </div>
           <pre>def selection_sort(arr):
     n = len(arr)
     for i in range(n):
@@ -685,6 +717,10 @@ solve()</pre>
 
         <div class="coding-card">
           <h3>4) Dijkstra's Algorithm</h3>
+          <div class="problem">
+            <p><strong>Problem:</strong> Find shortest paths in a weighted graph using Dijkstra's algorithm.</p>
+            <p>Typically asked in Digital/Prime level rounds.</p>
+          </div>
           <pre>import heapq
 
 def dijkstra(n, graph, start):
@@ -716,7 +752,11 @@ solve()</pre>
         </div>
 
         <div class="coding-card">
-          <h3>5) Second Largest Element</h3>
+          <h3>5) Array-Based Logic</h3>
+          <div class="problem">
+            <p><strong>Examples:</strong> second largest element, remove duplicates, reverse array.</p>
+            <p>Very common in TCS NQT coding sections.</p>
+          </div>
           <pre>def solve():
     n = int(input())
     arr = list(map(int, input().split()))
@@ -731,6 +771,10 @@ solve()</pre>
 
         <div class="coding-card">
           <h3>6) String: Palindrome + Reverse Words</h3>
+          <div class="problem">
+            <p><strong>Examples:</strong> palindrome check, reverse words, count vowels/consonants.</p>
+            <p>Frequently repeated in verbal+coding mixed rounds.</p>
+          </div>
           <pre>def solve():
     s = input().strip()
     print("Palindrome" if s == s[::-1] else "Not Palindrome")
@@ -741,7 +785,11 @@ solve()</pre>
         </div>
 
         <div class="coding-card">
-          <h3>7) Fibonacci (Iterative)</h3>
+          <h3>7) Recursion / Backtracking</h3>
+          <div class="problem">
+            <p><strong>Examples:</strong> Fibonacci, subsets, permutations.</p>
+            <p>Seen in previous NQT attempts.</p>
+          </div>
           <pre>def solve():
     n = int(input())
     a, b = 0, 1
@@ -753,7 +801,11 @@ solve()</pre>
         </div>
 
         <div class="coding-card">
-          <h3>8) Prime Check</h3>
+          <h3>8) Number-Based Problems</h3>
+          <div class="problem">
+            <p><strong>Examples:</strong> prime numbers, Armstrong number, series sum.</p>
+            <p>Regular beginner-level coding round pattern.</p>
+          </div>
           <pre>def is_prime(n):
     if n < 2:
         return False
