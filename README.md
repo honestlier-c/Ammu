@@ -1,6 +1,29 @@
 # Ammu — TCS NQT prep (Vite + React)
 
-This project is **Vite-only**: run it with the dev server or build static files. Do **not** open `index.html` directly from disk — the app loads `/src/main.tsx` as an ES module, which needs Vite’s dev server or a proper `dist/` deploy.
+## If you see: “MIME type application/octet-stream” for `main.tsx`
+
+That means the page is **not** being served by Vite. Common cases:
+
+| What you did | Fix |
+|--------------|-----|
+| Double‑clicked `index.html` or `file://…` | Run `npm install` then `npm run dev` |
+| `python -m http.server` on the repo root | Use `npm run dev` or `npm run build` then `npm run preview` |
+| GitHub Pages shows the **source** repo (no `dist`) | Enable the **GitHub Action** in `.github/workflows/pages.yml` and set Pages source to **GitHub Actions**, or manually upload **`dist/`** after `npm run build` |
+| Netlify **Publish directory** is wrong (e.g. repo root instead of `dist`) | Set **Publish directory** to `dist` (see `netlify.toml`) |
+
+This project is **Vite-only**: the browser must either use **`vite dev`** (transforms `.tsx`) or load the **built** JS files from **`dist/`** after **`npm run build`**.
+
+## Deploy on Netlify
+
+This repo includes **`netlify.toml`**: build = `npm run build`, publish = **`dist`**.
+
+1. **New site from Git** → pick this repo.  
+2. Netlify reads `netlify.toml` automatically.  
+3. **Do not** set Publish directory to `.` or leave the default repo root — it must be **`dist`** so the browser loads compiled **`.js`** bundles (not `/src/main.tsx`).
+
+**Base URL:** Netlify sites are usually at the domain root (`https://yoursite.netlify.app/`). Keep **`VITE_BASE` unset** (defaults to `/` in `vite.config.ts`). Only set `VITE_BASE` if you deploy under a subpath (uncommon on Netlify).
+
+Connect repo: [honestlier-c/Ammu](https://github.com/honestlier-c/Ammu)
 
 ## Run locally
 
@@ -22,7 +45,7 @@ Upload the contents of **`dist/`** to your host (e.g. GitHub Pages, Netlify).
 
 ### GitHub Pages (project site)
 
-If the site is served from `https://<user>.github.io/<repo>/`, set `base` in `vite.config.ts` to `/<repo>/` before building, or the assets will 404.
+For `https://honestlier-c.github.io/Ammu/`, the workflow sets `VITE_BASE=/Ammu/` during `npm run build`. If your repo name or Pages URL path is different, edit `VITE_BASE` in `.github/workflows/pages.yml` (and match that path in the repo **Settings → Pages** URL).
 
 ## Repo
 
