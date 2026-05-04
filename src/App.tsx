@@ -85,7 +85,7 @@ export default function App() {
             <Brain size={16} className="-rotate-45 text-black" />
           </div>
           <h1 className="text-xl font-serif tracking-tight text-[#c2a476]">
-            CORE.AIML <span className="hidden md:inline text-[10px] font-sans tracking-[0.2em] text-[#737373] ml-2 uppercase">Engineer Assessment</span>
+            Ammu <span className="hidden md:inline text-[10px] font-sans tracking-[0.2em] text-[#737373] ml-2 uppercase">TCS NQT prep</span>
           </h1>
         </div>
         
@@ -130,10 +130,10 @@ export default function App() {
                   className="h-1 bg-[#c2a476] mx-auto mb-8"
                 />
                 <h2 className="text-4xl md:text-6xl font-serif text-white leading-tight">
-                  Professional <span className="text-[#c2a476]">Architect</span> Assessment
+                  TCS NQT <span className="text-[#c2a476]">practice</span>
                 </h2>
                 <p className="text-[#737373] tracking-wide text-sm md:text-base uppercase">
-                  Rigorous evaluation modules for AIML system design & engineering
+                  Timed mock + full question bank (Vite + React)
                 </p>
               </div>
 
@@ -142,9 +142,9 @@ export default function App() {
                   <div className="text-[#737373] mb-8 group-hover:text-[#c2a476] transition-colors">
                     <LayoutDashboard size={32} strokeWidth={1} />
                   </div>
-                  <h3 className="text-2xl font-serif mb-4 text-white">Curriculum Practice</h3>
+                  <h3 className="text-2xl font-serif mb-4 text-white">Practice all</h3>
                   <p className="text-[#737373] mb-10 text-sm leading-relaxed">
-                    Iterative knowledge verification. 100 comprehensive modules across pure mathematics, neural architectures, and industrial pipelines.
+                    Work through the full bank at your own pace. Explanations appear after you finish a session.
                   </p>
                   <button 
                     onClick={() => startQuiz(false)}
@@ -161,9 +161,9 @@ export default function App() {
                   <div className="text-[#737373] mb-8 group-hover:text-[#c2a476] transition-colors">
                     <Timer size={32} strokeWidth={1} />
                   </div>
-                  <h3 className="text-2xl font-serif mb-4 text-white">Full Simulation</h3>
+                  <h3 className="text-2xl font-serif mb-4 text-white">Timed mock</h3>
                   <p className="text-[#737373] mb-10 text-sm leading-relaxed">
-                    Timed 30-minute synthesis. Random selection of 25 nodes to stress-test conceptual retention and architectural intuition.
+                    30-minute run with 25 random questions. Timer counts down while you are in quiz mode.
                   </p>
                   <button 
                     onClick={() => startQuiz(true)}
@@ -402,103 +402,167 @@ export default function App() {
             >
               <div className="space-y-4">
                 <div className="w-12 h-0.5 bg-[#c2a476]" />
-                <h2 className="text-4xl font-serif text-white">Engineering Library</h2>
-                <p className="text-[#737373] uppercase text-[10px] tracking-[0.3em]">Fundamental architectural implementations</p>
+                <h2 className="text-4xl font-serif text-white">Coding patterns</h2>
+                <p className="text-[#737373] uppercase text-[10px] tracking-[0.3em]">
+                  TCS NQT–style problems (exam-ready Python)
+                </p>
               </div>
 
               <div className="grid gap-12">
                 {[
                   {
-                    title: "Optimization Logic",
-                    desc: "Recursive gradient computational flow",
-                    tag: "Calculus",
-                    code: `def gradient_descent(x, y, lr=0.01, epochs=100):
-    w, b = 0.0, 0.0
-    n = len(x)
-    for _ in range(epochs):
-        y_pred = w * x + b
-        dw = (-2/n) * sum(x * (y - y_pred))
-        db = (-2/n) * sum(y - y_pred)
-        w -= lr * dw
-        b -= lr * db
-    return w, b`
+                    title: '1. Range filtering',
+                    desc: 'Divisible by 7, not by 5, not palindrome, no repeating digits',
+                    tag: 'Numbers',
+                    code: `def has_repeating_digits(n):
+    s = str(n)
+    return len(set(s)) != len(s)
+
+def is_palindrome(n):
+    s = str(n)
+    return s == s[::-1]
+
+def solve():
+    start = int(input())
+    end = int(input())
+    if start > end:
+        print("Invalid range")
+        return
+    result = []
+    for i in range(start, end + 1):
+        if i % 7 == 0 and i % 5 != 0 and not is_palindrome(i) and not has_repeating_digits(i):
+            result.append(i)
+    print(*result) if result else print("No numbers found")
+
+solve()`,
                   },
                   {
-                    title: "Vision Synthesis",
-                    desc: "Bounding box spatial intersection metrics",
-                    tag: "Geometry",
-                    code: `def compute_iou(box1, box2):
-    x_left = max(box1[0], box2[0])
-    y_top = max(box1[1], box2[1])
-    x_right = min(box1[2], box2[2])
-    y_bottom = min(box1[3], box2[3])
-    if x_right < x_left or y_bottom < y_top: return 0.0
-    inter = (x_right - x_left) * (y_bottom - y_top)
-    a1 = (box1[2]-box1[0])*(box1[3]-box1[1])
-    a2 = (box2[2]-box2[0])*(box2[3]-box2[1])
-    return inter / float(a1 + a2 - inter)`
+                    title: '2. Task sorting / priority',
+                    desc: 'Sort tasks by priority ascending',
+                    tag: 'Sort',
+                    code: `def solve():
+    n = int(input())
+    tasks = []
+    for _ in range(n):
+        priority, time = map(int, input().split())
+        tasks.append((priority, time))
+    tasks.sort()
+    for p, t in tasks:
+        print(p, t)
+
+solve()`,
                   },
                   {
-                    title: "Self-Attention",
-                    desc: "Non-recurrent sequence dependency mapping",
-                    tag: "Transformer",
-                    code: `import numpy as np
-def attention(Q, K, V):
-    d_k = Q.shape[-1]
-    scores = np.matmul(Q, K.T) / np.sqrt(d_k)
-    weights = np.exp(scores) / np.sum(np.exp(scores), axis=-1, keepdims=True)
-    return np.matmul(weights, V)`
+                    title: '3. Selection sort',
+                    desc: 'Implement selection sort, print sorted array',
+                    tag: 'Array',
+                    code: `def selection_sort(arr):
+    n = len(arr)
+    for i in range(n):
+        min_idx = i
+        for j in range(i + 1, n):
+            if arr[j] < arr[min_idx]:
+                min_idx = j
+        arr[i], arr[min_idx] = arr[min_idx], arr[i]
+    return arr
+
+def solve():
+    n = int(input())
+    arr = list(map(int, input().split()))
+    print(*selection_sort(arr))
+
+solve()`,
                   },
                   {
-                    title: "SQL Query Optimization",
-                    desc: "Advanced relational data retrieval patterns",
-                    tag: "MySQL",
-                    code: `-- Find the 2nd highest salary
-SELECT DISTINCT salary 
-FROM employees 
-ORDER BY salary DESC 
-LIMIT 1 OFFSET 1;
+                    title: "4. Dijkstra (shortest path)",
+                    desc: 'Weighted graph — classic Dijkstra',
+                    tag: 'Graph',
+                    code: `import heapq
 
--- Calculate rolling 7-day average sales
-SELECT 
-    sale_date,
-    amount,
-    AVG(amount) OVER (
-        ORDER BY sale_date 
-        ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
-    ) as rolling_avg
-FROM daily_sales;
+def dijkstra(n, graph, start):
+    dist = [float('inf')] * n
+    dist[start] = 0
+    pq = [(0, start)]
+    while pq:
+        curr_dist, node = heapq.heappop(pq)
+        if curr_dist > dist[node]:
+            continue
+        for neighbor, weight in graph[node]:
+            if dist[node] + weight < dist[neighbor]:
+                dist[neighbor] = dist[node] + weight
+                heapq.heappush(pq, (dist[neighbor], neighbor))
+    return dist
 
--- Join with filtering on aggregates
-SELECT department_id, COUNT(*) as emp_count
-FROM employees
-GROUP BY department_id
-HAVING emp_count > 10;`
+def solve():
+    n, e = map(int, input().split())
+    graph = [[] for _ in range(n)]
+    for _ in range(e):
+        u, v, w = map(int, input().split())
+        graph[u].append((v, w))
+        graph[v].append((u, w))
+    start = int(input())
+    print(*dijkstra(n, graph, start))
+
+solve()`,
                   },
                   {
-                    title: "PyTorch Custom Dataset",
-                    desc: "Standard boilerplate for data loading pipelines",
-                    tag: "PyTorch",
-                    code: `from torch.utils.data import Dataset, DataLoader
+                    title: '5. Second largest',
+                    desc: 'Array logic — unique sorted',
+                    tag: 'Array',
+                    code: `def solve():
+    n = int(input())
+    arr = list(map(int, input().split()))
+    unique = sorted(set(arr))
+    if len(unique) < 2:
+        print("No second largest")
+    else:
+        print(unique[-2])
 
-class SimpleDataset(Dataset):
-    def __init__(self, X, y):
-        self.X = X
-        self.y = y
-        
-    def __len__(self):
-        return len(self.X)
-        
-    def __getitem__(self, idx):
-        return self.X[idx], self.y[idx]
+solve()`,
+                  },
+                  {
+                    title: '6. String — palindrome + reverse words',
+                    desc: 'Palindrome check then reverse word order',
+                    tag: 'String',
+                    code: `def solve():
+    s = input().strip()
+    print("Palindrome" if s == s[::-1] else "Not Palindrome")
+    words = s.split()
+    print(" ".join(words[::-1]))
 
-# Usage
-loader = DataLoader(
-    dataset=SimpleDataset(X_tensor, y_tensor),
-    batch_size=32,
-    shuffle=True
-)`
-                  }
+solve()`,
+                  },
+                  {
+                    title: '7. Fibonacci (iterative)',
+                    desc: 'Prefer O(n) loop in exam',
+                    tag: 'DP',
+                    code: `def solve():
+    n = int(input())
+    a, b = 0, 1
+    for _ in range(n):
+        a, b = b, a + b
+    print(a)
+
+solve()`,
+                  },
+                  {
+                    title: '8. Prime check',
+                    desc: 'Number theory starter',
+                    tag: 'Math',
+                    code: `def is_prime(n):
+    if n < 2:
+        return False
+    for i in range(2, int(n**0.5) + 1):
+        if n % i == 0:
+            return False
+    return True
+
+def solve():
+    n = int(input())
+    print("Prime" if is_prime(n) else "Not Prime")
+
+solve()`,
+                  },
                 ].map((item, idx) => (
                   <div key={idx} className="space-y-4">
                     <div className="flex justify-between items-end border-b border-[#262626] pb-4">
@@ -523,7 +587,7 @@ loader = DataLoader(
         <div className="max-w-6xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex items-center gap-4">
             <div className="w-6 h-6 border border-[#c2a476] rotate-45" />
-            <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#737373]">Core.AIML Assessment Systems</p>
+            <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#737373]">Ammu · TCS NQT prep</p>
           </div>
           <div className="flex gap-8 text-[9px] text-[#404040] uppercase tracking-[0.2em] font-bold">
             <span className="hover:text-[#737373] cursor-help">Documentation</span>

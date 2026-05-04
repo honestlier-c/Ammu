@@ -1,20 +1,29 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Ammu — TCS NQT prep (Vite + React)
 
-# Run and deploy your AI Studio app
+This project is **Vite-only**: run it with the dev server or build static files. Do **not** open `index.html` directly from disk — the app loads `/src/main.tsx` as an ES module, which needs Vite’s dev server or a proper `dist/` deploy.
 
-This contains everything you need to run your app locally.
+## Run locally
 
-View your app in AI Studio: https://ai.studio/apps/603c9960-0d58-4d58-96e3-03c5f5778e92
+```bash
+npm install
+npm run dev
+```
 
-## Run Locally
+Then open the URL Vite prints (usually `http://localhost:3000`).
 
-**Prerequisites:**  Node.js
+## Production build
 
+```bash
+npm run build
+npm run preview
+```
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Upload the contents of **`dist/`** to your host (e.g. GitHub Pages, Netlify).
+
+### GitHub Pages (project site)
+
+If the site is served from `https://<user>.github.io/<repo>/`, set `base` in `vite.config.ts` to `/<repo>/` before building, or the assets will 404.
+
+## Repo
+
+https://github.com/honestlier-c/Ammu
