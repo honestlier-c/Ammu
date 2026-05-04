@@ -1,13 +1,3018 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ammu</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ammu - TCS NQT Quiz</title>
+  <style>
+    :root {
+      --bg: #eef2ff;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --primary: #4f46e5;
+      --primary-dark: #3730a3;
+      --success: #15803d;
+      --danger: #dc2626;
+      --border: #dbe3ef;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    }
 
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1080px;
+      margin: 20px auto;
+      padding: 0 16px 32px;
+    }
+
+    .header {
+      background: linear-gradient(120deg, #312e81, #4f46e5);
+      color: #fff;
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      margin-bottom: 14px;
+    }
+
+    .header h1 {
+      margin: 0 0 8px;
+      font-size: 1.7rem;
+    }
+
+    .header p {
+      margin: 0;
+      opacity: 0.95;
+    }
+
+    .tab-nav {
+      display: flex;
+      gap: 10px;
+      margin: 12px 0;
+    }
+
+    .tab-btn {
+      border: 1px solid var(--border);
+      background: #fff;
+      color: #1e1b4b;
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 290px;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .main-panel {
+      min-width: 0;
+    }
+
+    .side-panel {
+      position: sticky;
+      top: 12px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .section {
+      margin: 16px 0 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1e1b4b;
+      letter-spacing: 0.2px;
+    }
+
+    .question-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .question {
+      margin: 0 0 10px;
+      font-weight: 700;
+    }
+
+    .options {
+      display: grid;
+      gap: 8px;
+    }
+
+    .option-label {
+      display: block;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 10px;
+      cursor: pointer;
+      background: #fff;
+      transition: all 0.15s ease;
+    }
+
+    .option-label:hover {
+      border-color: #a5b4fc;
+      background: #f5f7ff;
+    }
+
+    .option-label.correct {
+      border-color: #15803d;
+      background: #dcfce7;
+      color: #14532d;
+      font-weight: 600;
+    }
+
+    .option-label.wrong {
+      border-color: #dc2626;
+      background: #fee2e2;
+      color: #7f1d1d;
+      font-weight: 600;
+    }
+
+    .option-label.selected {
+      border-color: var(--primary);
+      background: #eef2ff;
+      color: var(--primary-dark);
+      font-weight: 600;
+    }
+
+    .option-label.disabled {
+      cursor: default;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .progress-bar-inner {
+      height: 100%;
+      background: linear-gradient(90deg, #6366f1, #22c55e);
+      width: 0%;
+      transition: width 0.2s ease;
+    }
+
+    .palette {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .palette-btn {
+      padding: 6px 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #fff;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .palette-btn.answered {
+      background: #dcfce7;
+      border-color: #15803d;
+      color: #14532d;
+    }
+
+    .palette-btn.skipped {
+      background: #fee2e2;
+      border-color: #dc2626;
+      color: #7f1d1d;
+    }
+
+    .palette-btn.correct-final {
+      background: #bbf7d0;
+      border-color: #15803d;
+    }
+
+    .palette-btn.wrong-final {
+      background: #fecaca;
+      border-color: #dc2626;
+    }
+
+    .palette-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .palette-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .palette-legend i {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      border: 1px solid var(--border);
+    }
+
+    .palette-legend i.answered { background: #dcfce7; border-color: #15803d; }
+    .palette-legend i.skipped { background: #fee2e2; border-color: #dc2626; }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .modal-backdrop.show {
+      display: flex;
+    }
+
+    .modal {
+      background: #fff;
+      border-radius: 14px;
+      padding: 20px;
+      max-width: 420px;
+      width: calc(100% - 32px);
+      box-shadow: 0 20px 60px rgba(2,6,23,0.3);
+    }
+
+    .modal h3 {
+      margin: 0 0 8px;
+    }
+
+    .modal p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .section-breakdown {
+      margin-top: 14px;
+    }
+
+    .section-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 10px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 6px;
+      font-size: 0.92rem;
+    }
+
+    .section-row strong {
+      color: #1e1b4b;
+    }
+
+    .coding-wrapper {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    .coding-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .coding-card h3 {
+      margin: 0;
+      padding: 10px 12px;
+      background: #eef2ff;
+      color: #1e1b4b;
+      font-size: 1rem;
+    }
+
+    .coding-card .problem {
+      padding: 12px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: #f8fafc;
+      color: #1e293b;
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
+    .coding-card .problem p {
+      margin: 0 0 8px;
+    }
+
+    .coding-card .problem p:last-child {
+      margin-bottom: 0;
+    }
+
+    .coding-card pre {
+      margin: 0;
+      padding: 12px;
+      background: #0f172a;
+      color: #e2e8f0;
+      overflow-x: auto;
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+
+    .option-label .tag {
+      float: right;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .option-label.correct .tag {
+      background: #15803d;
+      color: #fff;
+    }
+
+    .option-label.wrong .tag {
+      background: #dc2626;
+      color: #fff;
+    }
+
+    .feedback {
+      margin-top: 10px;
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .feedback.correct {
+      color: #15803d;
+    }
+
+    .feedback.wrong {
+      color: #b91c1c;
+    }
+
+    .feedback.skipped {
+      color: #b45309;
+    }
+
+    .summary-card {
+      margin-top: 16px;
+      padding: 16px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      display: none;
+    }
+
+    .summary-card h3 {
+      margin: 0 0 10px;
+      color: #1e1b4b;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .summary-stat {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .summary-stat .label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .summary-stat .value {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-top: 4px;
+    }
+
+    .summary-stat.correct .value { color: #15803d; }
+    .summary-stat.wrong .value { color: #dc2626; }
+    .summary-stat.skipped .value { color: #b45309; }
+    .summary-stat.score .value { color: var(--primary); }
+
+    @media (max-width: 600px) {
+      .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .top-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 12px 0;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .timer {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .timer.live {
+      color: var(--danger);
+    }
+
+    .timer.paused {
+      color: #b45309;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin: 8px 0 0;
+    }
+
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      color: #fff;
+      background: var(--primary);
+      transition: background 0.15s ease;
+    }
+
+    button:hover {
+      background: var(--primary-dark);
+    }
+
+    button.secondary {
+      background: #475569;
+    }
+
+    #result {
+      margin-top: 14px;
+      font-weight: 700;
+    }
+
+    .success {
+      color: var(--success);
+    }
+
+    .danger {
+      color: var(--danger);
+    }
+
+    #answers {
+      margin-top: 16px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      display: none;
+    }
+
+    #answers h3 {
+      margin-top: 0;
+    }
+
+    #answers ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .pill {
+      display: inline-block;
+      background: #e0e7ff;
+      color: #312e81;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 980px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .side-panel {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>TCS NQT Quiz for Ammu</h1>
+      <p>Full-length TCS-style mock test with timer + all practice sets.</p>
+    </div>
+
+    <div class="tab-nav">
+      <button type="button" id="quizTabBtn" class="tab-btn active">Quiz</button>
+      <button type="button" id="codingTabBtn" class="tab-btn">Coding</button>
+    </div>
+
+    <div id="quizTab" class="tab-content active">
+    <div class="layout">
+      <div class="main-panel">
+        <div class="top-controls">
+          <div>
+            <button type="button" id="startMockBtn">Start Full-Length Mock Test (60 Q | 90 min)</button>
+            <button type="button" id="practiceAllBtn" class="secondary">Practice All Questions</button>
+          </div>
+          <div style="flex: 1; min-width: 220px;">
+            <span class="pill">Exam Controls</span>
+            <p id="stats" class="meta"></p>
+            <div class="progress-bar"><div id="progressBar" class="progress-bar-inner"></div></div>
+          </div>
+        </div>
+
+        <form id="quizForm"></form>
+
+        <div class="actions">
+          <button type="button" id="submitBtn">Submit Quiz</button>
+          <button type="button" id="resetBtn" class="secondary">Reset</button>
+        </div>
+
+        <p id="result"></p>
+
+        <div id="summary" class="summary-card">
+          <h3>Result Summary</h3>
+          <div class="summary-grid">
+            <div class="summary-stat score"><div class="label">Score</div><div class="value" id="summaryScore">0/0</div></div>
+            <div class="summary-stat correct"><div class="label">Correct</div><div class="value" id="summaryCorrect">0</div></div>
+            <div class="summary-stat wrong"><div class="label">Wrong</div><div class="value" id="summaryWrong">0</div></div>
+            <div class="summary-stat skipped"><div class="label">Skipped</div><div class="value" id="summarySkipped">0</div></div>
+          </div>
+          <p id="summaryMessage" class="meta"></p>
+          <div id="sectionBreakdown" class="section-breakdown"></div>
+          <div class="actions" style="margin-top: 12px;">
+            <button type="button" id="retryMockBtn">Retry Mock Test</button>
+            <button type="button" id="practiceAfterBtn" class="secondary">Practice Mode</button>
+          </div>
+        </div>
+      </div>
+
+      <aside class="side-panel">
+        <span class="pill">Timer</span>
+        <div id="timer" class="timer">Time Left: 90:00</div>
+        <p id="timerHint" class="meta">Timer runs only while this tab is active.</p>
+
+        <span class="pill" style="margin-top: 14px;">Question Palette</span>
+        <div id="palette" class="palette"></div>
+        <div class="palette-legend">
+          <span><i class="answered"></i> Answered</span>
+          <span><i class="skipped"></i> Skipped</span>
+          <span><i></i> Not visited</span>
+        </div>
+      </aside>
+    </div>
+    </div>
+
+    <div id="codingTab" class="tab-content">
+      <div class="coding-wrapper">
+        <h2 style="margin-top:0;">TCS NQT Coding Patterns (Exam-Ready Python)</h2>
+        <p class="meta" style="margin:0 0 12px;">Clean implementations for quick revision and practice.</p>
+
+        <div class="coding-card">
+          <h3>1) Range Filtering (Real Question Type)</h3>
+          <div class="problem">
+            <p><strong>Problem:</strong> Given two numbers <code>start</code> and <code>end</code>, print all numbers such that:</p>
+            <p>- Divisible by 7<br>- Not divisible by 5<br>- Not palindrome<br>- No repeating digits</p>
+            <p>If invalid range, print <code>Invalid range</code>.</p>
+            <p>Common in recent TCS TAG/NQT assessments.</p>
+          </div>
+          <pre>def has_repeating_digits(n):
+    s = str(n)
+    return len(set(s)) != len(s)
+
+def is_palindrome(n):
+    s = str(n)
+    return s == s[::-1]
+
+def solve():
+    start = int(input())
+    end = int(input())
+    if start > end:
+        print("Invalid range")
+        return
+
+    result = []
+    for i in range(start, end + 1):
+        if i % 7 == 0 and i % 5 != 0 and not is_palindrome(i) and not has_repeating_digits(i):
+            result.append(i)
+
+    print(*result) if result else print("No numbers found")
+
+solve()</pre>
+        </div>
+
+        <div class="coding-card">
+          <h3>2) Task Sorting / Priority Scheduling</h3>
+          <div class="problem">
+            <p><strong>Problem:</strong> Given <code>n</code> tasks, each with priority and completion time, sort tasks by priority (ascending).</p>
+            <p>Reported in recent 2026 shift discussions.</p>
+          </div>
+          <pre>def solve():
+    n = int(input())
+    tasks = []
+    for _ in range(n):
+        priority, time = map(int, input().split())
+        tasks.append((priority, time))
+
+    tasks.sort()
+    for p, t in tasks:
+        print(p, t)
+
+solve()</pre>
+        </div>
+
+        <div class="coding-card">
+          <h3>3) Selection Sort</h3>
+          <div class="problem">
+            <p><strong>Problem:</strong> Implement Selection Sort and print the sorted array.</p>
+            <p>Common easy 25-mark category question.</p>
+          </div>
+          <pre>def selection_sort(arr):
+    n = len(arr)
+    for i in range(n):
+        min_idx = i
+        for j in range(i + 1, n):
+            if arr[j] < arr[min_idx]:
+                min_idx = j
+        arr[i], arr[min_idx] = arr[min_idx], arr[i]
+    return arr
+
+def solve():
+    n = int(input())
+    arr = list(map(int, input().split()))
+    print(*selection_sort(arr))
+
+solve()</pre>
+        </div>
+
+        <div class="coding-card">
+          <h3>4) Dijkstra's Algorithm</h3>
+          <div class="problem">
+            <p><strong>Problem:</strong> Find shortest paths in a weighted graph using Dijkstra's algorithm.</p>
+            <p>Typically asked in Digital/Prime level rounds.</p>
+          </div>
+          <pre>import heapq
+
+def dijkstra(n, graph, start):
+    dist = [float('inf')] * n
+    dist[start] = 0
+    pq = [(0, start)]
+
+    while pq:
+        curr_dist, node = heapq.heappop(pq)
+        if curr_dist > dist[node]:
+            continue
+        for neighbor, weight in graph[node]:
+            if dist[node] + weight < dist[neighbor]:
+                dist[neighbor] = dist[node] + weight
+                heapq.heappush(pq, (dist[neighbor], neighbor))
+    return dist
+
+def solve():
+    n, e = map(int, input().split())
+    graph = [[] for _ in range(n)]
+    for _ in range(e):
+        u, v, w = map(int, input().split())
+        graph[u].append((v, w))
+        graph[v].append((u, w))
+    start = int(input())
+    print(*dijkstra(n, graph, start))
+
+solve()</pre>
+        </div>
+
+        <div class="coding-card">
+          <h3>5) Array-Based Logic</h3>
+          <div class="problem">
+            <p><strong>Examples:</strong> second largest element, remove duplicates, reverse array.</p>
+            <p>Very common in TCS NQT coding sections.</p>
+          </div>
+          <pre>def solve():
+    n = int(input())
+    arr = list(map(int, input().split()))
+    unique = sorted(set(arr))
+    if len(unique) < 2:
+        print("No second largest")
+    else:
+        print(unique[-2])
+
+solve()</pre>
+        </div>
+
+        <div class="coding-card">
+          <h3>6) String: Palindrome + Reverse Words</h3>
+          <div class="problem">
+            <p><strong>Examples:</strong> palindrome check, reverse words, count vowels/consonants.</p>
+            <p>Frequently repeated in verbal+coding mixed rounds.</p>
+          </div>
+          <pre>def solve():
+    s = input().strip()
+    print("Palindrome" if s == s[::-1] else "Not Palindrome")
+    words = s.split()
+    print(" ".join(words[::-1]))
+
+solve()</pre>
+        </div>
+
+        <div class="coding-card">
+          <h3>7) Recursion / Backtracking</h3>
+          <div class="problem">
+            <p><strong>Examples:</strong> Fibonacci, subsets, permutations.</p>
+            <p>Seen in previous NQT attempts.</p>
+          </div>
+          <pre>def solve():
+    n = int(input())
+    a, b = 0, 1
+    for _ in range(n):
+        a, b = b, a + b
+    print(a)
+
+solve()</pre>
+        </div>
+
+        <div class="coding-card">
+          <h3>8) Number-Based Problems</h3>
+          <div class="problem">
+            <p><strong>Examples:</strong> prime numbers, Armstrong number, series sum.</p>
+            <p>Regular beginner-level coding round pattern.</p>
+          </div>
+          <pre>def is_prime(n):
+    if n < 2:
+        return False
+    for i in range(2, int(n**0.5) + 1):
+        if n % i == 0:
+            return False
+    return True
+
+def solve():
+    n = int(input())
+    print("Prime" if is_prime(n) else "Not Prime")
+
+solve()</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="confirmModal" class="modal-backdrop">
+    <div class="modal">
+      <h3>Submit Quiz?</h3>
+      <p id="confirmMessage">Are you sure you want to submit the test?</p>
+      <div class="modal-actions">
+        <button type="button" id="confirmCancel" class="secondary">Keep Answering</button>
+        <button type="button" id="confirmSubmit">Submit Now</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        section: "Quantitative Aptitude",
+        question: "1. A shopkeeper marks his goods 20% above cost price and allows a discount of 10%. What is his profit percentage?",
+        options: ["A) 8%", "B) 10%", "C) 12%", "D) 15%"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude",
+        question: "2. A can complete a work in 10 days and B in 15 days. How many days will they take to complete the work together?",
+        options: ["A) 5 days", "B) 6 days", "C) 7 days", "D) 8 days"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude",
+        question: "3. A train 120 m long crosses a pole in 6 seconds. What is its speed?",
+        options: ["A) 60 km/h", "B) 72 km/h", "C) 80 km/h", "D) 90 km/h"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude",
+        question: "4. The sum of two numbers is 100 and their ratio is 3:2. Find the numbers.",
+        options: ["A) 60, 40", "B) 50, 50", "C) 40, 60", "D) 30, 70"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude",
+        question: "5. The population of a town increases by 10% every year. If the current population is 20000, what will it be after 2 years?",
+        options: ["A) 22000", "B) 24200", "C) 24000", "D) 23000"],
+        answer: 1
+      },
+      {
+        section: "Logical Reasoning",
+        question: "6. If CAT is coded as DBU, how is DOG coded?",
+        options: ["A) EPH", "B) EOG", "C) FQI", "D) DPH"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning",
+        question: "7. Pointing to a woman, Raj said, \"She is the daughter of my grandfather's only son.\" How is the woman related to Raj?",
+        options: ["A) Sister", "B) Cousin", "C) Mother", "D) Aunt"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning",
+        question: "8. Statements: All cats are animals. Some animals are dogs. Conclusions: 1) Some dogs are cats 2) Some animals are cats",
+        options: ["A) Only 1 follows", "B) Only 2 follows", "C) Both follow", "D) None follows"],
+        answer: 1
+      },
+      {
+        section: "Logical Reasoning",
+        question: "9. Five people A, B, C, D, E are sitting in a row. A is to the left of B, and C is to the right of B. Who is in the middle?",
+        options: ["A) A", "B) B", "C) C", "D) D"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability",
+        question: "10. Identify the error: \"He do not like coffee.\"",
+        options: ["A) He", "B) do", "C) not", "D) coffee"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability",
+        question: "11. Choose the synonym of \"Rapid\"",
+        options: ["A) Slow", "B) Fast", "C) Weak", "D) Calm"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability",
+        question: "12. Arrange the sentences: 1) He went to the market 2) He bought fruits 3) He left home 4) He returned",
+        options: ["A) 3-1-2-4", "B) 1-3-2-4", "C) 3-2-1-4", "D) 2-1-3-4"],
+        answer: 0
+      },
+      {
+        section: "Mixed / DI",
+        question: "13. A company's sales increased from 100 units to 150 units. What is the percentage increase?",
+        options: ["A) 40%", "B) 50%", "C) 60%", "D) 70%"],
+        answer: 1
+      },
+      {
+        section: "High Probability Bonus",
+        question: "14. A container has milk and water in ratio 4:1. If 5 liters of water is added, the ratio becomes 4:3. Find initial quantity.",
+        options: ["A) 10L", "B) 15L", "C) 20L", "D) 25L"],
+        answer: 2
+      },
+      {
+        section: "High Probability Bonus",
+        question: "15. Find remainder when 2^5 is divided by 3.",
+        options: ["A) 1", "B) 2", "C) 0", "D) 3"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 2)",
+        question: "Set 2 - 1. If CP = 500 and profit = 20%, find SP.",
+        options: ["A) 550", "B) 600", "C) 650", "D) 700"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 2)",
+        question: "Set 2 - 2. A train travels 60 km in 1 hour. What is speed in m/s?",
+        options: ["A) 10", "B) 16.67", "C) 20", "D) 25"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 2)",
+        question: "Set 2 - 3. A can do work in 12 days, B in 6 days. Together?",
+        options: ["A) 4", "B) 6", "C) 8", "D) 3"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 2)",
+        question: "Set 2 - 4. Ratio 5:3, sum 64. Numbers?",
+        options: ["A) 40, 24", "B) 30, 34", "C) 50, 14", "D) 45, 19"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 2)",
+        question: "Set 2 - 5. 10% increase then 10% decrease -> net?",
+        options: ["A) 0%", "B) 1% loss", "C) 1% gain", "D) 2% loss"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 2)",
+        question: "Set 2 - 6. SI on 1000 at 10% for 2 years?",
+        options: ["A) 200", "B) 210", "C) 220", "D) 250"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 2)",
+        question: "Set 2 - 7. LCM of 12 and 15?",
+        options: ["A) 60", "B) 30", "C) 45", "D) 120"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 2)",
+        question: "Set 2 - 8. Average of 10, 20, 30?",
+        options: ["A) 15", "B) 20", "C) 25", "D) 30"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 2)",
+        question: "Set 2 - 9. Boat speed 10 km/h, stream 2 km/h. Downstream?",
+        options: ["A) 8", "B) 10", "C) 12", "D) 14"],
+        answer: 2
+      },
+      {
+        section: "Quantitative Aptitude (Set 2)",
+        question: "Set 2 - 10. Pipe fills tank in 5 hrs. Half time?",
+        options: ["A) 2.5", "B) 3", "C) 4", "D) 5"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 2)",
+        question: "Set 2 - 11. Find next: 2, 4, 8, 16, ?",
+        options: ["A) 18", "B) 24", "C) 32", "D) 30"],
+        answer: 2
+      },
+      {
+        section: "Logical Reasoning (Set 2)",
+        question: "Set 2 - 12. If A=1, B=2, CAT=?",
+        options: ["A) 24", "B) 20", "C) 26", "D) 27"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 2)",
+        question: "Set 2 - 13. Odd one out: Apple, Banana, Carrot, Mango",
+        options: ["A) Apple", "B) Banana", "C) Carrot", "D) Mango"],
+        answer: 2
+      },
+      {
+        section: "Logical Reasoning (Set 2)",
+        question: "Set 2 - 14. Mirror of 123?",
+        options: ["A) 321", "B) 132", "C) 213", "D) 231"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 2)",
+        question: "Set 2 - 15. Find missing: 3, 9, 27, ?",
+        options: ["A) 54", "B) 81", "C) 72", "D) 90"],
+        answer: 1
+      },
+      {
+        section: "Logical Reasoning (Set 2)",
+        question: "Set 2 - 16. Direction: North -> East turn right, then?",
+        options: ["A) South", "B) North", "C) West", "D) East"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 2)",
+        question: "Set 2 - 17. Alphabet next: A, C, F, J, ?",
+        options: ["A) N", "B) O", "C) P", "D) M"],
+        answer: 1
+      },
+      {
+        section: "Logical Reasoning (Set 2)",
+        question: "Set 2 - 18. Series: 5, 10, 20, ?",
+        options: ["A) 25", "B) 30", "C) 40", "D) 35"],
+        answer: 2
+      },
+      {
+        section: "Logical Reasoning (Set 2)",
+        question: "Set 2 - 19. Coding: DOG -> EPH, CAT -> ?",
+        options: ["A) DBU", "B) DZU", "C) EBU", "D) FBU"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 2)",
+        question: "Set 2 - 20. Blood: Brother's son?",
+        options: ["A) Cousin", "B) Nephew", "C) Uncle", "D) Son"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 2)",
+        question: "Set 2 - 21. Synonym: Happy",
+        options: ["A) Sad", "B) Joyful", "C) Angry", "D) Weak"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 2)",
+        question: "Set 2 - 22. Antonym: Strong",
+        options: ["A) Weak", "B) Bold", "C) Brave", "D) Fast"],
+        answer: 0
+      },
+      {
+        section: "Verbal Ability (Set 2)",
+        question: "Set 2 - 23. Fill: She ___ going.",
+        options: ["A) is", "B) are", "C) am", "D) be"],
+        answer: 0
+      },
+      {
+        section: "Verbal Ability (Set 2)",
+        question: "Set 2 - 24. Error: He go to school.",
+        options: ["A) He", "B) go", "C) to", "D) school"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 2)",
+        question: "Set 2 - 25. Meaning of \"Rapid\"",
+        options: ["A) Fast", "B) Slow", "C) Weak", "D) Calm"],
+        answer: 0
+      },
+      {
+        section: "Verbal Ability (Set 2)",
+        question: "Set 2 - 26. Choose correct: They ___ playing.",
+        options: ["A) is", "B) are", "C) am", "D) be"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 2)",
+        question: "Set 2 - 27. Article: ___ apple",
+        options: ["A) a", "B) an", "C) the", "D) no article"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 2)",
+        question: "Set 2 - 28. Plural: Child",
+        options: ["A) Childs", "B) Children", "C) Childes", "D) Childrens"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 2)",
+        question: "Set 2 - 29. Correct sentence:",
+        options: ["A) He are good", "B) He is good", "C) He am good", "D) He be good"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 2)",
+        question: "Set 2 - 30. Synonym: Big",
+        options: ["A) Large", "B) Small", "C) Tiny", "D) Thin"],
+        answer: 0
+      },
+      {
+        section: "Mixed / DI / Number (Set 2)",
+        question: "Set 2 - 31. 50% of 200?",
+        options: ["A) 50", "B) 100", "C) 150", "D) 200"],
+        answer: 1
+      },
+      {
+        section: "Mixed / DI / Number (Set 2)",
+        question: "Set 2 - 32. Square of 12?",
+        options: ["A) 124", "B) 144", "C) 154", "D) 164"],
+        answer: 1
+      },
+      {
+        section: "Mixed / DI / Number (Set 2)",
+        question: "Set 2 - 33. Cube of 3?",
+        options: ["A) 6", "B) 9", "C) 27", "D) 18"],
+        answer: 2
+      },
+      {
+        section: "Mixed / DI / Number (Set 2)",
+        question: "Set 2 - 34. Remainder of 10/3?",
+        options: ["A) 1", "B) 2", "C) 3", "D) 0"],
+        answer: 0
+      },
+      {
+        section: "Mixed / DI / Number (Set 2)",
+        question: "Set 2 - 35. Prime number?",
+        options: ["A) 9", "B) 15", "C) 17", "D) 21"],
+        answer: 2
+      },
+      {
+        section: "Mixed / DI / Number (Set 2)",
+        question: "Set 2 - 36. Even number?",
+        options: ["A) 13", "B) 17", "C) 20", "D) 23"],
+        answer: 2
+      },
+      {
+        section: "Mixed / DI / Number (Set 2)",
+        question: "Set 2 - 37. Odd number?",
+        options: ["A) 10", "B) 12", "C) 15", "D) 18"],
+        answer: 2
+      },
+      {
+        section: "Mixed / DI / Number (Set 2)",
+        question: "Set 2 - 38. Next: 1, 4, 9, 16, ?",
+        options: ["A) 20", "B) 25", "C) 30", "D) 36"],
+        answer: 1
+      },
+      {
+        section: "Mixed / DI / Number (Set 2)",
+        question: "Set 2 - 39. HCF of 8, 12?",
+        options: ["A) 2", "B) 4", "C) 6", "D) 8"],
+        answer: 1
+      },
+      {
+        section: "Mixed / DI / Number (Set 2)",
+        question: "Set 2 - 40. Perimeter of square side 5?",
+        options: ["A) 10", "B) 15", "C) 20", "D) 25"],
+        answer: 2
+      },
+      {
+        section: "Quantitative Aptitude (Set 3)",
+        question: "Set 3 - 1. A sum becomes double in 5 years at SI. Rate?",
+        options: ["A) 10%", "B) 20%", "C) 25%", "D) 15%"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 3)",
+        question: "Set 3 - 2. CP = 800, loss = 10%. SP?",
+        options: ["A) 720", "B) 700", "C) 750", "D) 780"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 3)",
+        question: "Set 3 - 3. Distance = 120 km, time = 2 hr. Speed?",
+        options: ["A) 40", "B) 50", "C) 60", "D) 70"],
+        answer: 2
+      },
+      {
+        section: "Quantitative Aptitude (Set 3)",
+        question: "Set 3 - 4. A does work in 8 days. One day work?",
+        options: ["A) 1/6", "B) 1/8", "C) 1/10", "D) 1/12"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 3)",
+        question: "Set 3 - 5. Ratio 2:3, total 50. Find numbers.",
+        options: ["A) 20,30", "B) 25,25", "C) 10,40", "D) 15,35"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 3)",
+        question: "Set 3 - 6. 15% of 200?",
+        options: ["A) 20", "B) 25", "C) 30", "D) 35"],
+        answer: 2
+      },
+      {
+        section: "Quantitative Aptitude (Set 3)",
+        question: "Set 3 - 7. CI for 1 year same as?",
+        options: ["A) SI", "B) Double SI", "C) Half SI", "D) None"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 3)",
+        question: "Set 3 - 8. LCM of 9, 6?",
+        options: ["A) 18", "B) 27", "C) 36", "D) 54"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 3)",
+        question: "Set 3 - 9. Average of first 5 numbers?",
+        options: ["A) 2", "B) 3", "C) 4", "D) 5"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 3)",
+        question: "Set 3 - 10. Upstream speed = 8, boat = 10 -> stream?",
+        options: ["A) 1", "B) 2", "C) 3", "D) 4"],
+        answer: 1
+      },
+      {
+        section: "Logical Reasoning (Set 3)",
+        question: "Set 3 - 11. Series: 1, 3, 6, 10, ?",
+        options: ["A) 12", "B) 15", "C) 18", "D) 20"],
+        answer: 1
+      },
+      {
+        section: "Logical Reasoning (Set 3)",
+        question: "Set 3 - 12. Alphabet: Z, X, U, Q, ?",
+        options: ["A) M", "B) N", "C) O", "D) L"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 3)",
+        question: "Set 3 - 13. Odd one: Dog, Cat, Cow, Tiger",
+        options: ["A) Dog", "B) Cat", "C) Cow", "D) Tiger"],
+        answer: 2
+      },
+      {
+        section: "Logical Reasoning (Set 3)",
+        question: "Set 3 - 14. Mirror of 789?",
+        options: ["A) 987", "B) 879", "C) 798", "D) 897"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 3)",
+        question: "Set 3 - 15. Series: 2, 6, 18, ?",
+        options: ["A) 36", "B) 54", "C) 48", "D) 60"],
+        answer: 1
+      },
+      {
+        section: "Logical Reasoning (Set 3)",
+        question: "Set 3 - 16. Direction: East -> right -> ?",
+        options: ["A) North", "B) South", "C) West", "D) East"],
+        answer: 1
+      },
+      {
+        section: "Logical Reasoning (Set 3)",
+        question: "Set 3 - 17. Coding: ABC -> BCD, XYZ -> ?",
+        options: ["A) YZA", "B) ZAB", "C) YZX", "D) XYA"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 3)",
+        question: "Set 3 - 18. Series: 4, 16, 64, ?",
+        options: ["A) 128", "B) 256", "C) 196", "D) 100"],
+        answer: 1
+      },
+      {
+        section: "Logical Reasoning (Set 3)",
+        question: "Set 3 - 19. Blood: Mother's brother?",
+        options: ["A) Uncle", "B) Cousin", "C) Father", "D) Son"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 3)",
+        question: "Set 3 - 20. Analogy: Pen : Write :: Knife : ?",
+        options: ["A) Cut", "B) Eat", "C) Hold", "D) Throw"],
+        answer: 0
+      },
+      {
+        section: "Verbal Ability (Set 3)",
+        question: "Set 3 - 21. Synonym: Quick",
+        options: ["A) Fast", "B) Slow", "C) Late", "D) Calm"],
+        answer: 0
+      },
+      {
+        section: "Verbal Ability (Set 3)",
+        question: "Set 3 - 22. Antonym: Rich",
+        options: ["A) Poor", "B) Wealthy", "C) Strong", "D) Happy"],
+        answer: 0
+      },
+      {
+        section: "Verbal Ability (Set 3)",
+        question: "Set 3 - 23. Fill: I ___ a student.",
+        options: ["A) is", "B) am", "C) are", "D) be"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 3)",
+        question: "Set 3 - 24. Error: She have a pen.",
+        options: ["A) She", "B) have", "C) a", "D) pen"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 3)",
+        question: "Set 3 - 25. Meaning: Huge",
+        options: ["A) Big", "B) Small", "C) Thin", "D) Short"],
+        answer: 0
+      },
+      {
+        section: "Verbal Ability (Set 3)",
+        question: "Set 3 - 26. Fill: We ___ going.",
+        options: ["A) is", "B) am", "C) are", "D) be"],
+        answer: 2
+      },
+      {
+        section: "Verbal Ability (Set 3)",
+        question: "Set 3 - 27. Article: ___ umbrella",
+        options: ["A) a", "B) an", "C) the", "D) no"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 3)",
+        question: "Set 3 - 28. Plural: Mouse",
+        options: ["A) Mouses", "B) Mice", "C) Mousees", "D) Mousen"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 3)",
+        question: "Set 3 - 29. Correct sentence:",
+        options: ["A) They is here", "B) They are here", "C) They am here", "D) They be here"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 3)",
+        question: "Set 3 - 30. Synonym: Small",
+        options: ["A) Tiny", "B) Big", "C) Large", "D) Huge"],
+        answer: 0
+      },
+      {
+        section: "Mixed (Set 3)",
+        question: "Set 3 - 31. 25% of 400?",
+        options: ["A) 50", "B) 75", "C) 100", "D) 125"],
+        answer: 2
+      },
+      {
+        section: "Mixed (Set 3)",
+        question: "Set 3 - 32. Square of 15?",
+        options: ["A) 200", "B) 225", "C) 250", "D) 275"],
+        answer: 1
+      },
+      {
+        section: "Mixed (Set 3)",
+        question: "Set 3 - 33. Cube of 4?",
+        options: ["A) 16", "B) 32", "C) 64", "D) 48"],
+        answer: 2
+      },
+      {
+        section: "Mixed (Set 3)",
+        question: "Set 3 - 34. Remainder of 7/2?",
+        options: ["A) 1", "B) 2", "C) 3", "D) 0"],
+        answer: 0
+      },
+      {
+        section: "Mixed (Set 3)",
+        question: "Set 3 - 35. Prime number?",
+        options: ["A) 21", "B) 19", "C) 15", "D) 27"],
+        answer: 1
+      },
+      {
+        section: "Mixed (Set 3)",
+        question: "Set 3 - 36. Even?",
+        options: ["A) 11", "B) 13", "C) 18", "D) 21"],
+        answer: 2
+      },
+      {
+        section: "Mixed (Set 3)",
+        question: "Set 3 - 37. Odd?",
+        options: ["A) 20", "B) 22", "C) 25", "D) 28"],
+        answer: 2
+      },
+      {
+        section: "Mixed (Set 3)",
+        question: "Set 3 - 38. Next: 2, 5, 10, 17, ?",
+        options: ["A) 24", "B) 26", "C) 30", "D) 20"],
+        answer: 1
+      },
+      {
+        section: "Mixed (Set 3)",
+        question: "Set 3 - 39. HCF of 18, 24?",
+        options: ["A) 3", "B) 6", "C) 9", "D) 12"],
+        answer: 1
+      },
+      {
+        section: "Mixed (Set 3)",
+        question: "Set 3 - 40. Area of square side 6?",
+        options: ["A) 30", "B) 36", "C) 42", "D) 48"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 4)",
+        question: "Set 4 - 1. If SP = 1200 and profit = 20%, find CP.",
+        options: ["A) 800", "B) 900", "C) 1000", "D) 1100"],
+        answer: 2
+      },
+      {
+        section: "Quantitative Aptitude (Set 4)",
+        question: "Set 4 - 2. A train runs at 72 km/h. Distance in 10 sec?",
+        options: ["A) 150 m", "B) 200 m", "C) 180 m", "D) 120 m"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 4)",
+        question: "Set 4 - 3. A completes work in 20 days, B in 30 days. Together?",
+        options: ["A) 10", "B) 12", "C) 15", "D) 18"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 4)",
+        question: "Set 4 - 4. Ratio 7:3, total 200?",
+        options: ["A) 140,60", "B) 150,50", "C) 160,40", "D) 120,80"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 4)",
+        question: "Set 4 - 5. 20% of 150?",
+        options: ["A) 25", "B) 30", "C) 35", "D) 40"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 4)",
+        question: "Set 4 - 6. SI on 5000 at 5% for 2 years?",
+        options: ["A) 400", "B) 500", "C) 600", "D) 700"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 4)",
+        question: "Set 4 - 7. LCM of 8, 12?",
+        options: ["A) 24", "B) 48", "C) 36", "D) 72"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 4)",
+        question: "Set 4 - 8. Average of 5,10,15,20?",
+        options: ["A) 10", "B) 12.5", "C) 15", "D) 20"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 4)",
+        question: "Set 4 - 9. Boat 15 km/h, stream 5 km/h. Upstream?",
+        options: ["A) 5", "B) 8", "C) 10", "D) 12"],
+        answer: 2
+      },
+      {
+        section: "Quantitative Aptitude (Set 4)",
+        question: "Set 4 - 10. Pipe fills tank in 10 hrs. 1/4 tank time?",
+        options: ["A) 2.5", "B) 3", "C) 4", "D) 5"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 4)",
+        question: "Set 4 - 11. Series: 3, 6, 12, 24, ?",
+        options: ["A) 36", "B) 48", "C) 60", "D) 72"],
+        answer: 1
+      },
+      {
+        section: "Logical Reasoning (Set 4)",
+        question: "Set 4 - 12. Alphabet: B, E, I, N, ?",
+        options: ["A) S", "B) T", "C) U", "D) R"],
+        answer: 1
+      },
+      {
+        section: "Logical Reasoning (Set 4)",
+        question: "Set 4 - 13. Odd one: Rose, Lotus, Apple, Lily",
+        options: ["A) Rose", "B) Lotus", "C) Apple", "D) Lily"],
+        answer: 2
+      },
+      {
+        section: "Logical Reasoning (Set 4)",
+        question: "Set 4 - 14. Mirror of 456?",
+        options: ["A) 654", "B) 546", "C) 465", "D) 564"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 4)",
+        question: "Set 4 - 15. Series: 5, 15, 45, ?",
+        options: ["A) 90", "B) 120", "C) 135", "D) 150"],
+        answer: 2
+      },
+      {
+        section: "Logical Reasoning (Set 4)",
+        question: "Set 4 - 16. Direction: South -> left -> ?",
+        options: ["A) East", "B) West", "C) North", "D) South"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 4)",
+        question: "Set 4 - 17. Coding: DEF -> EFG, HIJ -> ?",
+        options: ["A) IJK", "B) JKL", "C) HJK", "D) IKL"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 4)",
+        question: "Set 4 - 18. Series: 6, 36, 216, ?",
+        options: ["A) 432", "B) 648", "C) 1296", "D) 1080"],
+        answer: 2
+      },
+      {
+        section: "Logical Reasoning (Set 4)",
+        question: "Set 4 - 19. Blood: Father's sister?",
+        options: ["A) Aunt", "B) Cousin", "C) Mother", "D) Sister"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 4)",
+        question: "Set 4 - 20. Analogy: Book : Read :: Food : ?",
+        options: ["A) Eat", "B) Cook", "C) Serve", "D) Hold"],
+        answer: 0
+      },
+      {
+        section: "Verbal Ability (Set 4)",
+        question: "Set 4 - 21. Synonym: Bright",
+        options: ["A) Dull", "B) Smart", "C) Dark", "D) Slow"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 4)",
+        question: "Set 4 - 22. Antonym: Easy",
+        options: ["A) Simple", "B) Hard", "C) Clear", "D) Fast"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 4)",
+        question: "Set 4 - 23. Fill: He ___ playing.",
+        options: ["A) is", "B) are", "C) am", "D) be"],
+        answer: 0
+      },
+      {
+        section: "Verbal Ability (Set 4)",
+        question: "Set 4 - 24. Error: They is happy.",
+        options: ["A) They", "B) is", "C) happy", "D) none"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 4)",
+        question: "Set 4 - 25. Meaning: Tiny",
+        options: ["A) Small", "B) Big", "C) Large", "D) Huge"],
+        answer: 0
+      },
+      {
+        section: "Verbal Ability (Set 4)",
+        question: "Set 4 - 26. Fill: You ___ late.",
+        options: ["A) is", "B) am", "C) are", "D) be"],
+        answer: 2
+      },
+      {
+        section: "Verbal Ability (Set 4)",
+        question: "Set 4 - 27. Article: ___ hour",
+        options: ["A) a", "B) an", "C) the", "D) no"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 4)",
+        question: "Set 4 - 28. Plural: Foot",
+        options: ["A) Foots", "B) Feets", "C) Feet", "D) Footes"],
+        answer: 2
+      },
+      {
+        section: "Verbal Ability (Set 4)",
+        question: "Set 4 - 29. Correct:",
+        options: ["A) She are good", "B) She is good", "C) She am good", "D) She be good"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 4)",
+        question: "Set 4 - 30. Synonym: Angry",
+        options: ["A) Happy", "B) Mad", "C) Calm", "D) Cool"],
+        answer: 1
+      },
+      {
+        section: "Mixed (Set 4)",
+        question: "Set 4 - 31. 30% of 300?",
+        options: ["A) 60", "B) 70", "C) 80", "D) 90"],
+        answer: 3
+      },
+      {
+        section: "Mixed (Set 4)",
+        question: "Set 4 - 32. Square of 18?",
+        options: ["A) 324", "B) 300", "C) 350", "D) 360"],
+        answer: 0
+      },
+      {
+        section: "Mixed (Set 4)",
+        question: "Set 4 - 33. Cube of 5?",
+        options: ["A) 25", "B) 75", "C) 125", "D) 150"],
+        answer: 2
+      },
+      {
+        section: "Mixed (Set 4)",
+        question: "Set 4 - 34. Remainder of 9/4?",
+        options: ["A) 1", "B) 2", "C) 3", "D) 0"],
+        answer: 0
+      },
+      {
+        section: "Mixed (Set 4)",
+        question: "Set 4 - 35. Prime?",
+        options: ["A) 25", "B) 29", "C) 21", "D) 27"],
+        answer: 1
+      },
+      {
+        section: "Mixed (Set 4)",
+        question: "Set 4 - 36. Even?",
+        options: ["A) 19", "B) 23", "C) 26", "D) 29"],
+        answer: 2
+      },
+      {
+        section: "Mixed (Set 4)",
+        question: "Set 4 - 37. Odd?",
+        options: ["A) 14", "B) 18", "C) 21", "D) 24"],
+        answer: 2
+      },
+      {
+        section: "Mixed (Set 4)",
+        question: "Set 4 - 38. Next: 3, 7, 13, 21, ?",
+        options: ["A) 30", "B) 31", "C) 32", "D) 33"],
+        answer: 1
+      },
+      {
+        section: "Mixed (Set 4)",
+        question: "Set 4 - 39. HCF of 20, 30?",
+        options: ["A) 5", "B) 10", "C) 15", "D) 20"],
+        answer: 1
+      },
+      {
+        section: "Mixed (Set 4)",
+        question: "Set 4 - 40. Area of square side 8?",
+        options: ["A) 56", "B) 64", "C) 72", "D) 80"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 5)",
+        question: "Set 5 - 1. If CP = 1500 and profit = 25%, find SP.",
+        options: ["A) 1700", "B) 1800", "C) 1875", "D) 1900"],
+        answer: 2
+      },
+      {
+        section: "Quantitative Aptitude (Set 5)",
+        question: "Set 5 - 2. A car travels 90 km in 1.5 hours. Speed?",
+        options: ["A) 50", "B) 60", "C) 70", "D) 80"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 5)",
+        question: "Set 5 - 3. A does a job in 15 days, B in 10 days. Together?",
+        options: ["A) 5", "B) 6", "C) 7", "D) 8"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 5)",
+        question: "Set 5 - 4. Ratio 4:5, total 180?",
+        options: ["A) 80,100", "B) 90,90", "C) 70,110", "D) 60,120"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 5)",
+        question: "Set 5 - 5. 25% of 240?",
+        options: ["A) 50", "B) 55", "C) 60", "D) 65"],
+        answer: 2
+      },
+      {
+        section: "Quantitative Aptitude (Set 5)",
+        question: "Set 5 - 6. SI on 2000 at 8% for 2 years?",
+        options: ["A) 300", "B) 320", "C) 340", "D) 360"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 5)",
+        question: "Set 5 - 7. LCM of 14 and 21?",
+        options: ["A) 42", "B) 28", "C) 56", "D) 84"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 5)",
+        question: "Set 5 - 8. Average of 2,4,6,8?",
+        options: ["A) 4", "B) 5", "C) 6", "D) 7"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 5)",
+        question: "Set 5 - 9. Boat speed 12 km/h, stream 3 km/h. Downstream?",
+        options: ["A) 9", "B) 12", "C) 15", "D) 18"],
+        answer: 2
+      },
+      {
+        section: "Quantitative Aptitude (Set 5)",
+        question: "Set 5 - 10. Tank filled in 8 hrs. 3/4 time?",
+        options: ["A) 4", "B) 5", "C) 6", "D) 7"],
+        answer: 2
+      },
+      {
+        section: "Logical Reasoning (Set 5)",
+        question: "Set 5 - 11. Series: 7, 14, 28, 56, ?",
+        options: ["A) 84", "B) 96", "C) 112", "D) 120"],
+        answer: 2
+      },
+      {
+        section: "Logical Reasoning (Set 5)",
+        question: "Set 5 - 12. Alphabet: C, F, J, O, ?",
+        options: ["A) T", "B) U", "C) V", "D) S"],
+        answer: 1
+      },
+      {
+        section: "Logical Reasoning (Set 5)",
+        question: "Set 5 - 13. Odd one: Table, Chair, Bed, Car",
+        options: ["A) Table", "B) Chair", "C) Bed", "D) Car"],
+        answer: 3
+      },
+      {
+        section: "Logical Reasoning (Set 5)",
+        question: "Set 5 - 14. Mirror of 246?",
+        options: ["A) 642", "B) 264", "C) 426", "D) 624"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 5)",
+        question: "Set 5 - 15. Series: 8, 24, 72, ?",
+        options: ["A) 144", "B) 216", "C) 200", "D) 240"],
+        answer: 1
+      },
+      {
+        section: "Logical Reasoning (Set 5)",
+        question: "Set 5 - 16. Direction: West -> right -> ?",
+        options: ["A) North", "B) South", "C) East", "D) West"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 5)",
+        question: "Set 5 - 17. Coding: MNO -> NOP, STU -> ?",
+        options: ["A) TUV", "B) SUV", "C) UVW", "D) TUW"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 5)",
+        question: "Set 5 - 18. Series: 9, 81, 729, ?",
+        options: ["A) 1000", "B) 6561", "C) 5000", "D) 6000"],
+        answer: 1
+      },
+      {
+        section: "Logical Reasoning (Set 5)",
+        question: "Set 5 - 19. Blood: Sister's son?",
+        options: ["A) Nephew", "B) Cousin", "C) Uncle", "D) Brother"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 5)",
+        question: "Set 5 - 20. Analogy: Teacher : Teach :: Driver : ?",
+        options: ["A) Ride", "B) Drive", "C) Move", "D) Sit"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 5)",
+        question: "Set 5 - 21. Synonym: Smart",
+        options: ["A) Clever", "B) Slow", "C) Weak", "D) Dull"],
+        answer: 0
+      },
+      {
+        section: "Verbal Ability (Set 5)",
+        question: "Set 5 - 22. Antonym: Hot",
+        options: ["A) Warm", "B) Cold", "C) Boiling", "D) Heat"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 5)",
+        question: "Set 5 - 23. Fill: They ___ happy.",
+        options: ["A) is", "B) am", "C) are", "D) be"],
+        answer: 2
+      },
+      {
+        section: "Verbal Ability (Set 5)",
+        question: "Set 5 - 24. Error: He have done it.",
+        options: ["A) He", "B) have", "C) done", "D) it"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 5)",
+        question: "Set 5 - 25. Meaning: Large",
+        options: ["A) Big", "B) Small", "C) Thin", "D) Tiny"],
+        answer: 0
+      },
+      {
+        section: "Verbal Ability (Set 5)",
+        question: "Set 5 - 26. Fill: I ___ late.",
+        options: ["A) is", "B) am", "C) are", "D) be"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 5)",
+        question: "Set 5 - 27. Article: ___ honest man",
+        options: ["A) a", "B) an", "C) the", "D) no"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 5)",
+        question: "Set 5 - 28. Plural: Tooth",
+        options: ["A) Tooths", "B) Teeth", "C) Toothes", "D) Toothen"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 5)",
+        question: "Set 5 - 29. Correct:",
+        options: ["A) We is ready", "B) We are ready", "C) We am ready", "D) We be ready"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 5)",
+        question: "Set 5 - 30. Synonym: Calm",
+        options: ["A) Peaceful", "B) Angry", "C) Loud", "D) Fast"],
+        answer: 0
+      },
+      {
+        section: "Mixed (Set 5)",
+        question: "Set 5 - 31. 40% of 250?",
+        options: ["A) 80", "B) 90", "C) 100", "D) 110"],
+        answer: 2
+      },
+      {
+        section: "Mixed (Set 5)",
+        question: "Set 5 - 32. Square of 14?",
+        options: ["A) 186", "B) 196", "C) 204", "D) 210"],
+        answer: 1
+      },
+      {
+        section: "Mixed (Set 5)",
+        question: "Set 5 - 33. Cube of 6?",
+        options: ["A) 216", "B) 196", "C) 256", "D) 144"],
+        answer: 0
+      },
+      {
+        section: "Mixed (Set 5)",
+        question: "Set 5 - 34. Remainder of 11/5?",
+        options: ["A) 1", "B) 2", "C) 3", "D) 4"],
+        answer: 0
+      },
+      {
+        section: "Mixed (Set 5)",
+        question: "Set 5 - 35. Prime?",
+        options: ["A) 33", "B) 37", "C) 39", "D) 45"],
+        answer: 1
+      },
+      {
+        section: "Mixed (Set 5)",
+        question: "Set 5 - 36. Even?",
+        options: ["A) 31", "B) 35", "C) 40", "D) 45"],
+        answer: 2
+      },
+      {
+        section: "Mixed (Set 5)",
+        question: "Set 5 - 37. Odd?",
+        options: ["A) 22", "B) 26", "C) 29", "D) 30"],
+        answer: 2
+      },
+      {
+        section: "Mixed (Set 5)",
+        question: "Set 5 - 38. Next: 4, 9, 16, 25, ?",
+        options: ["A) 30", "B) 35", "C) 36", "D) 40"],
+        answer: 2
+      },
+      {
+        section: "Mixed (Set 5)",
+        question: "Set 5 - 39. HCF of 16, 24?",
+        options: ["A) 4", "B) 6", "C) 8", "D) 12"],
+        answer: 2
+      },
+      {
+        section: "Mixed (Set 5)",
+        question: "Set 5 - 40. Perimeter of square side 9?",
+        options: ["A) 27", "B) 30", "C) 36", "D) 40"],
+        answer: 2
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 1. CP=1000, profit 10%. SP?",
+        options: ["A) 1050", "B) 1100", "C) 1150", "D) 1200"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 2. Train 100m crosses pole in 5 sec. Speed?",
+        options: ["A) 72", "B) 60", "C) 80", "D) 90"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 3. A does work in 10 days, B in 20. Together?",
+        options: ["A) 6.67", "B) 5", "C) 8", "D) 10"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 4. Ratio 2:3 sum 50?",
+        options: ["A) 20,30", "B) 25,25", "C) 15,35", "D) 10,40"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 5. 10% of 500?",
+        options: ["A) 40", "B) 50", "C) 60", "D) 70"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 6. SI on 1500 at 10% for 2 years?",
+        options: ["A) 200", "B) 250", "C) 300", "D) 350"],
+        answer: 2
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 7. LCM 10,15?",
+        options: ["A) 30", "B) 45", "C) 60", "D) 75"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 8. Average 5,10,15?",
+        options: ["A) 10", "B) 12", "C) 15", "D) 20"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 9. Boat 8, stream 2 -> downstream?",
+        options: ["A) 6", "B) 8", "C) 10", "D) 12"],
+        answer: 2
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 10. Pipe fills in 4 hr. Half?",
+        options: ["A) 1", "B) 2", "C) 3", "D) 4"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 11. 20% increase on 100?",
+        options: ["A) 110", "B) 115", "C) 120", "D) 130"],
+        answer: 2
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 12. CP=500, loss 20%. SP?",
+        options: ["A) 350", "B) 400", "C) 450", "D) 420"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 13. Distance=150, time=3 hr. Speed?",
+        options: ["A) 40", "B) 50", "C) 60", "D) 70"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 14. Work: A=6 days -> 1 day?",
+        options: ["A) 1/6", "B) 1/5", "C) 1/4", "D) 1/3"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 15. Ratio 3:5 total 80?",
+        options: ["A) 30,50", "B) 40,40", "C) 20,60", "D) 25,55"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 16. 25% of 80?",
+        options: ["A) 10", "B) 15", "C) 20", "D) 25"],
+        answer: 2
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 17. CI 1 yr = ?",
+        options: ["A) SI", "B) Double", "C) Half", "D) None"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 18. LCM 6,8?",
+        options: ["A) 24", "B) 48", "C) 16", "D) 12"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 19. Avg first 4 numbers?",
+        options: ["A) 2.5", "B) 3", "C) 4", "D) 5"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 20. Upstream 6, boat 10 -> stream?",
+        options: ["A) 2", "B) 3", "C) 4", "D) 5"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 21. 15% of 200?",
+        options: ["A) 20", "B) 25", "C) 30", "D) 35"],
+        answer: 2
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 22. SP=600, CP=500 profit?",
+        options: ["A) 10%", "B) 15%", "C) 20%", "D) 25%"],
+        answer: 2
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 23. Speed 72 km/h -> m/s?",
+        options: ["A) 10", "B) 15", "C) 20", "D) 25"],
+        answer: 2
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 24. A=12 days B=12 -> together?",
+        options: ["A) 12", "B) 6", "C) 8", "D) 10"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 25. Ratio 1:4 sum 50?",
+        options: ["A) 10,40", "B) 20,30", "C) 25,25", "D) 5,45"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 26. 50% of 90?",
+        options: ["A) 40", "B) 45", "C) 50", "D) 60"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 27. SI 1000,5%,2yr?",
+        options: ["A) 100", "B) 120", "C) 150", "D) 200"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 28. LCM 9,12?",
+        options: ["A) 36", "B) 18", "C) 24", "D) 12"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 29. Average 2,4,6?",
+        options: ["A) 3", "B) 4", "C) 5", "D) 6"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 30. Boat 10, stream 2 upstream?",
+        options: ["A) 8", "B) 6", "C) 12", "D) 10"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 31. 10% then 10% decrease?",
+        options: ["A) 0", "B) -1%", "C) +1%", "D) -2%"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 32. CP=800 loss 25%?",
+        options: ["A) 600", "B) 650", "C) 700", "D) 750"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 33. Distance 180 in 3 hr?",
+        options: ["A) 50", "B) 60", "C) 70", "D) 80"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 34. A=5 days B=5 -> together?",
+        options: ["A) 5", "B) 2.5", "C) 3", "D) 4"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 35. Ratio 4:1 sum 100?",
+        options: ["A) 80,20", "B) 75,25", "C) 60,40", "D) 50,50"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 36. 30% of 200?",
+        options: ["A) 50", "B) 60", "C) 70", "D) 80"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 37. SI 500,10%,1yr?",
+        options: ["A) 50", "B) 60", "C) 70", "D) 80"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 38. LCM 4,6?",
+        options: ["A) 12", "B) 24", "C) 6", "D) 18"],
+        answer: 0
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 39. Avg 1-5?",
+        options: ["A) 2", "B) 3", "C) 4", "D) 5"],
+        answer: 1
+      },
+      {
+        section: "Quantitative Aptitude (Set 6)",
+        question: "Set 6 - 40. Boat 15 stream 5 upstream?",
+        options: ["A) 5", "B) 10", "C) 20", "D) 15"],
+        answer: 1
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 41. 2,4,8,16,?",
+        options: ["A) 20", "B) 24", "C) 32", "D) 30"],
+        answer: 2
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 42. 3,9,27,?",
+        options: ["A) 54", "B) 72", "C) 81", "D) 90"],
+        answer: 2
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 43. Odd one out: Apple, Banana, Carrot, Mango",
+        options: ["A) Apple", "B) Banana", "C) Carrot", "D) Mango"],
+        answer: 2
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 44. Mirror of 123?",
+        options: ["A) 321", "B) 231", "C) 213", "D) 132"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 45. Coding CAT->DBU, DOG?",
+        options: ["A) EPH", "B) EOG", "C) FQI", "D) DPH"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 46. Brother's son?",
+        options: ["A) Cousin", "B) Nephew", "C) Uncle", "D) Son"],
+        answer: 1
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 47. 1,3,6,10,?",
+        options: ["A) 12", "B) 15", "C) 18", "D) 20"],
+        answer: 1
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 48. A,C,F,J,?",
+        options: ["A) N", "B) O", "C) P", "D) M"],
+        answer: 1
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 49. North -> right?",
+        options: ["A) East", "B) West", "C) South", "D) North"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 50. Pen:Write :: Knife:?",
+        options: ["A) Cut", "B) Eat", "C) Hold", "D) Throw"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 51. 5,10,20,?",
+        options: ["A) 25", "B) 30", "C) 40", "D) 35"],
+        answer: 2
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 52. Z,X,U,Q,?",
+        options: ["A) M", "B) N", "C) O", "D) L"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 53. Odd one: Dog, Cat, Cow, Tiger",
+        options: ["A) Dog", "B) Cat", "C) Cow", "D) Tiger"],
+        answer: 2
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 54. Mirror 456?",
+        options: ["A) 654", "B) 546", "C) 465", "D) 564"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 55. ABC->BCD, XYZ?",
+        options: ["A) YZA", "B) ZAB", "C) YZX", "D) XYA"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 56. Mother's brother?",
+        options: ["A) Uncle", "B) Cousin", "C) Father", "D) Son"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 57. 4,16,64,?",
+        options: ["A) 128", "B) 256", "C) 196", "D) 100"],
+        answer: 1
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 58. East -> right?",
+        options: ["A) North", "B) South", "C) West", "D) East"],
+        answer: 1
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 59. Book:Read :: Food:?",
+        options: ["A) Eat", "B) Cook", "C) Serve", "D) Hold"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 60. 7,14,28,?",
+        options: ["A) 42", "B) 56", "C) 70", "D) 84"],
+        answer: 1
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 61. B,E,I,N,?",
+        options: ["A) S", "B) T", "C) U", "D) R"],
+        answer: 1
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 62. Odd one: Rose, Lotus, Apple, Lily",
+        options: ["A) Rose", "B) Lotus", "C) Apple", "D) Lily"],
+        answer: 2
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 63. Mirror 789?",
+        options: ["A) 987", "B) 879", "C) 798", "D) 897"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 64. DEF->EFG, HIJ?",
+        options: ["A) IJK", "B) JKL", "C) HJK", "D) IKL"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 65. Father's sister?",
+        options: ["A) Aunt", "B) Cousin", "C) Mother", "D) Sister"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 66. 2,6,18,?",
+        options: ["A) 36", "B) 54", "C) 48", "D) 60"],
+        answer: 1
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 67. South -> left?",
+        options: ["A) East", "B) West", "C) North", "D) South"],
+        answer: 0
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 68. Teacher:Teach :: Driver:?",
+        options: ["A) Ride", "B) Drive", "C) Move", "D) Sit"],
+        answer: 1
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 69. 9,81,729,?",
+        options: ["A) 1000", "B) 6561", "C) 5000", "D) 6000"],
+        answer: 1
+      },
+      {
+        section: "Logical Reasoning (Set 6)",
+        question: "Set 6 - 70. Sister's son?",
+        options: ["A) Nephew", "B) Cousin", "C) Uncle", "D) Brother"],
+        answer: 0
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 71. Synonym of Happy?",
+        options: ["A) Sad", "B) Joyful", "C) Angry", "D) Weak"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 72. Antonym of Strong?",
+        options: ["A) Weak", "B) Bold", "C) Brave", "D) Fast"],
+        answer: 0
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 73. She ___ going.",
+        options: ["A) is", "B) are", "C) am", "D) be"],
+        answer: 0
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 74. Error: He go to school.",
+        options: ["A) He", "B) go", "C) to", "D) school"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 75. Meaning of Rapid?",
+        options: ["A) Fast", "B) Slow", "C) Weak", "D) Calm"],
+        answer: 0
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 76. They ___ playing.",
+        options: ["A) is", "B) are", "C) am", "D) be"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 77. ___ apple",
+        options: ["A) a", "B) an", "C) the", "D) no article"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 78. Plural of Child?",
+        options: ["A) Childs", "B) Children", "C) Childes", "D) Childrens"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 79. Correct sentence:",
+        options: ["A) He are good", "B) He is good", "C) He am good", "D) He be good"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 80. Synonym of Big?",
+        options: ["A) Large", "B) Small", "C) Tiny", "D) Thin"],
+        answer: 0
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 81. Synonym of Quick?",
+        options: ["A) Fast", "B) Slow", "C) Late", "D) Calm"],
+        answer: 0
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 82. Antonym of Rich?",
+        options: ["A) Poor", "B) Wealthy", "C) Strong", "D) Happy"],
+        answer: 0
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 83. I ___ a student.",
+        options: ["A) is", "B) am", "C) are", "D) be"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 84. Error: She have a pen.",
+        options: ["A) She", "B) have", "C) a", "D) pen"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 85. Meaning of Huge?",
+        options: ["A) Big", "B) Small", "C) Thin", "D) Short"],
+        answer: 0
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 86. We ___ going.",
+        options: ["A) is", "B) am", "C) are", "D) be"],
+        answer: 2
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 87. ___ umbrella",
+        options: ["A) a", "B) an", "C) the", "D) no"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 88. Plural of Mouse?",
+        options: ["A) Mouses", "B) Mice", "C) Mousees", "D) Mousen"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 89. Correct sentence:",
+        options: ["A) They is here", "B) They are here", "C) They am here", "D) They be here"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 90. Synonym of Small?",
+        options: ["A) Tiny", "B) Big", "C) Large", "D) Huge"],
+        answer: 0
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 91. Synonym of Bright?",
+        options: ["A) Dull", "B) Smart", "C) Dark", "D) Slow"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 92. Antonym of Easy?",
+        options: ["A) Simple", "B) Hard", "C) Clear", "D) Fast"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 93. He ___ playing.",
+        options: ["A) is", "B) are", "C) am", "D) be"],
+        answer: 0
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 94. Error: They is happy.",
+        options: ["A) They", "B) is", "C) happy", "D) none"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 95. Meaning of Tiny?",
+        options: ["A) Small", "B) Big", "C) Large", "D) Huge"],
+        answer: 0
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 96. You ___ late.",
+        options: ["A) is", "B) am", "C) are", "D) be"],
+        answer: 2
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 97. ___ hour",
+        options: ["A) a", "B) an", "C) the", "D) no"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 98. Plural of Foot?",
+        options: ["A) Foots", "B) Feets", "C) Feet", "D) Footes"],
+        answer: 2
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 99. Correct sentence:",
+        options: ["A) She are good", "B) She is good", "C) She am good", "D) She be good"],
+        answer: 1
+      },
+      {
+        section: "Verbal Ability (Set 6)",
+        question: "Set 6 - 100. Synonym of Angry?",
+        options: ["A) Happy", "B) Mad", "C) Calm", "D) Cool"],
+        answer: 1
+      }
+    ];
+
+    const quizForm = document.getElementById("quizForm");
+    const result = document.getElementById("result");
+    const answerList = document.getElementById("answerList");
+    const answersBox = document.getElementById("answers");
+    const hasAnswersBox = !!answersBox;
+    const timerEl = document.getElementById("timer");
+    const timerHintEl = document.getElementById("timerHint");
+    const statsEl = document.getElementById("stats");
+    const startMockBtn = document.getElementById("startMockBtn");
+    const practiceAllBtn = document.getElementById("practiceAllBtn");
+    const summaryCard = document.getElementById("summary");
+    const summaryScoreEl = document.getElementById("summaryScore");
+    const summaryCorrectEl = document.getElementById("summaryCorrect");
+    const summaryWrongEl = document.getElementById("summaryWrong");
+    const summarySkippedEl = document.getElementById("summarySkipped");
+    const summaryMessageEl = document.getElementById("summaryMessage");
+    const progressBar = document.getElementById("progressBar");
+    const paletteEl = document.getElementById("palette");
+    const sectionBreakdownEl = document.getElementById("sectionBreakdown");
+    const confirmModal = document.getElementById("confirmModal");
+    const confirmMessage = document.getElementById("confirmMessage");
+    const confirmCancel = document.getElementById("confirmCancel");
+    const confirmSubmit = document.getElementById("confirmSubmit");
+    const retryMockBtn = document.getElementById("retryMockBtn");
+    const practiceAfterBtn = document.getElementById("practiceAfterBtn");
+    const quizTabBtn = document.getElementById("quizTabBtn");
+    const codingTabBtn = document.getElementById("codingTabBtn");
+    const quizTab = document.getElementById("quizTab");
+    const codingTab = document.getElementById("codingTab");
+
+    const mockConfig = {
+      durationMinutes: 90,
+      quantCount: 20,
+      reasoningCount: 20,
+      verbalCount: 20
+    };
+
+    let activeQuestions = [];
+    let timerInterval = null;
+    let remainingSeconds = mockConfig.durationMinutes * 60;
+    let isMockMode = false;
+    let hasSubmitted = false;
+    let isTimerPaused = false;
+
+    function shuffle(list) {
+      const arr = [...list];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function pickRandom(list, count) {
+      return shuffle(list).slice(0, Math.min(count, list.length));
+    }
+
+    function formatTime(totalSeconds) {
+      const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+      const seconds = String(totalSeconds % 60).padStart(2, "0");
+      return `${minutes}:${seconds}`;
+    }
+
+    function cleanSectionName(sectionName) {
+      return sectionName.replace(/\s*\(Set\s*\d+\)\s*/gi, "").trim();
+    }
+
+    function cleanQuestionText(questionText) {
+      return questionText.replace(/^Set\s*\d+\s*-\s*\d+\.\s*/i, "").trim();
+    }
+
+    function updateTimerDisplay() {
+      if (!isMockMode) {
+        timerEl.textContent = "Timer: Off (Practice Mode)";
+        timerHintEl.textContent = "Switch to mock mode to enable timer.";
+        timerEl.classList.remove("live", "paused");
+        return;
+      }
+
+      timerEl.textContent = `Time Left: ${formatTime(Math.max(remainingSeconds, 0))}`;
+      timerEl.classList.remove("live", "paused");
+      if (isTimerPaused) {
+        timerEl.classList.add("paused");
+        timerHintEl.textContent = "Timer paused: return to this tab to continue.";
+      } else {
+        timerEl.classList.add("live");
+        timerHintEl.textContent = "Timer runs only while this tab is active.";
+      }
+    }
+
+    function updateStats() {
+      const total = activeQuestions.length;
+      const answered = activeQuestions.reduce((count, _, index) => {
+        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+        return count + (selected ? 1 : 0);
+      }, 0);
+      statsEl.textContent = `${isMockMode ? "Mock Mode" : "Practice Mode"} | Answered: ${answered}/${total}`;
+      const percent = total === 0 ? 0 : Math.round((answered / total) * 100);
+      progressBar.style.width = `${percent}%`;
+      updatePalette();
+    }
+
+    function updatePalette() {
+      if (!paletteEl) {
+        return;
+      }
+      paletteEl.innerHTML = "";
+      activeQuestions.forEach((_, index) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "palette-btn";
+        btn.textContent = String(index + 1);
+        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+        if (hasSubmitted) {
+          const card = quizForm.querySelector(`[data-qi="${index}"]`);
+          if (card) {
+            if (selected && Number(selected.value) === activeQuestions[index].answer) {
+              btn.classList.add("correct-final");
+            } else {
+              btn.classList.add("wrong-final");
+            }
+          }
+        } else if (selected) {
+          btn.classList.add("answered");
+        }
+        btn.addEventListener("click", () => {
+          const card = quizForm.querySelector(`[data-qi="${index}"]`);
+          if (card) {
+            card.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        });
+        paletteEl.appendChild(btn);
+      });
+    }
+
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      isTimerPaused = false;
+      updateTimerDisplay();
+    }
+
+    function resumeTimer() {
+      if (!isMockMode || hasSubmitted || remainingSeconds <= 0 || document.hidden || timerInterval) {
+        return;
+      }
+      isTimerPaused = false;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        remainingSeconds -= 1;
+        updateTimerDisplay();
+        if (remainingSeconds <= 0) {
+          stopTimer();
+          calculateScore(true);
+        }
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      if (isMockMode && !hasSubmitted) {
+        isTimerPaused = true;
+      }
+      updateTimerDisplay();
+    }
+
+    function startTimer() {
+      stopTimer();
+      isTimerPaused = false;
+      updateTimerDisplay();
+      resumeTimer();
+    }
+
+    function handleVisibilityChange() {
+      if (!isMockMode || hasSubmitted) {
+        return;
+      }
+      const shouldPause = document.hidden || !document.hasFocus();
+      if (shouldPause) {
+        pauseTimer();
+      } else {
+        resumeTimer();
+      }
+    }
+
+    function renderQuiz() {
+      quizForm.innerHTML = "";
+      result.textContent = "";
+      result.className = "";
+      if (answersBox) answersBox.style.display = "none";
+      if (answerList) answerList.innerHTML = "";
+      hasSubmitted = false;
+
+      let currentSection = "";
+      let serial = 1;
+
+      activeQuestions.forEach((q, index) => {
+        const sectionName = cleanSectionName(q.section);
+        if (sectionName !== currentSection) {
+          currentSection = sectionName;
+          const section = document.createElement("p");
+          section.className = "section";
+          section.textContent = currentSection;
+          quizForm.appendChild(section);
+        }
+
+        const card = document.createElement("div");
+        card.className = "question-card";
+        card.dataset.qi = String(index);
+
+        const ques = document.createElement("p");
+        ques.className = "question";
+        ques.textContent = `${serial}. ${cleanQuestionText(q.question)}`;
+        card.appendChild(ques);
+        serial += 1;
+
+        const optWrap = document.createElement("div");
+        optWrap.className = "options";
+
+        q.options.forEach((opt, optIndex) => {
+          const id = `q${index}_o${optIndex}`;
+          const label = document.createElement("label");
+          label.className = "option-label";
+          label.htmlFor = id;
+          label.dataset.oi = String(optIndex);
+
+          const input = document.createElement("input");
+          input.type = "radio";
+          input.name = `q${index}`;
+          input.id = id;
+          input.value = optIndex;
+          input.addEventListener("change", () => {
+            if (hasSubmitted) {
+              return;
+            }
+            const parent = label.parentElement;
+            if (parent) {
+              parent.querySelectorAll(".option-label").forEach((l) => l.classList.remove("selected"));
+            }
+            label.classList.add("selected");
+            updateStats();
+          });
+
+          label.appendChild(input);
+          label.append(" " + opt);
+          optWrap.appendChild(label);
+        });
+
+        card.appendChild(optWrap);
+
+        const feedback = document.createElement("div");
+        feedback.className = "feedback";
+        card.appendChild(feedback);
+
+        quizForm.appendChild(card);
+      });
+
+      updateStats();
+    }
+
+    function buildMockQuestions() {
+      const quant = questions.filter((q) => q.section.startsWith("Quantitative Aptitude"));
+      const reasoning = questions.filter((q) => q.section.startsWith("Logical Reasoning"));
+      const verbal = questions.filter((q) => q.section.startsWith("Verbal Ability"));
+
+      const chosen = [
+        ...pickRandom(quant, mockConfig.quantCount),
+        ...pickRandom(reasoning, mockConfig.reasoningCount),
+        ...pickRandom(verbal, mockConfig.verbalCount)
+      ];
+
+      return chosen;
+    }
+
+    function startMockTest() {
+      isMockMode = true;
+      remainingSeconds = mockConfig.durationMinutes * 60;
+      activeQuestions = buildMockQuestions();
+      renderQuiz();
+      startTimer();
+    }
+
+    function startPracticeAll() {
+      isMockMode = false;
+      stopTimer();
+      activeQuestions = [...questions];
+      renderQuiz();
+      updateTimerDisplay();
+    }
+
+    function calculateScore(autoSubmitted = false) {
+      if (hasSubmitted) {
+        return;
+      }
+
+      let correctCount = 0;
+      let wrongCount = 0;
+      let skippedCount = 0;
+
+      activeQuestions.forEach((q, index) => {
+        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+        const card = quizForm.querySelector(`[data-qi="${index}"]`);
+        if (!card) {
+          return;
+        }
+
+        const selectedIndex = selected ? Number(selected.value) : null;
+        const feedback = card.querySelector(".feedback");
+
+        q.options.forEach((_, optIndex) => {
+          const label = card.querySelector(`label[data-oi="${optIndex}"]`);
+          if (!label) {
+            return;
+          }
+          label.classList.remove("correct", "wrong");
+          label.classList.add("disabled");
+          const existingTag = label.querySelector(".tag");
+          if (existingTag) {
+            existingTag.remove();
+          }
+
+          const input = label.querySelector("input");
+          if (input) {
+            input.disabled = true;
+          }
+
+          if (optIndex === q.answer) {
+            label.classList.add("correct");
+            const tag = document.createElement("span");
+            tag.className = "tag";
+            tag.textContent = "Correct";
+            label.appendChild(tag);
+          } else if (selectedIndex === optIndex) {
+            label.classList.add("wrong");
+            const tag = document.createElement("span");
+            tag.className = "tag";
+            tag.textContent = "Your Answer";
+            label.appendChild(tag);
+          }
+        });
+
+        if (selectedIndex === null) {
+          skippedCount += 1;
+          if (feedback) {
+            feedback.className = "feedback skipped";
+            feedback.textContent = `Skipped. Correct answer: ${q.options[q.answer]}`;
+          }
+        } else if (selectedIndex === q.answer) {
+          correctCount += 1;
+          if (feedback) {
+            feedback.className = "feedback correct";
+            feedback.textContent = "Correct!";
+          }
+        } else {
+          wrongCount += 1;
+          if (feedback) {
+            feedback.className = "feedback wrong";
+            feedback.textContent = `Wrong. Correct answer: ${q.options[q.answer]}`;
+          }
+        }
+      });
+
+      const total = activeQuestions.length;
+      const score = correctCount;
+      const attempted = correctCount + wrongCount;
+      const percent = ((score / total) * 100).toFixed(1);
+      const passMark = Math.ceil(total * 0.6);
+      const passed = score >= passMark;
+
+      result.className = passed ? "success" : "danger";
+      result.textContent = `${autoSubmitted ? "Time up! " : ""}Your Score: ${score}/${total} (${percent}%) | Attempted: ${attempted}/${total} - ${passed ? "Great work!" : "Keep practicing!"}`;
+
+      summaryScoreEl.textContent = `${score}/${total}`;
+      summaryCorrectEl.textContent = String(correctCount);
+      summaryWrongEl.textContent = String(wrongCount);
+      summarySkippedEl.textContent = String(skippedCount);
+      summaryMessageEl.textContent = `${percent}% score · ${passed ? "Passed (>= 60%)" : "Below pass mark (60%)"}${autoSubmitted ? " · Auto-submitted" : ""}`;
+      summaryCard.style.display = "block";
+
+      const sectionStats = {};
+      activeQuestions.forEach((q, index) => {
+        const sectionName = cleanSectionName(q.section);
+        if (!sectionStats[sectionName]) {
+          sectionStats[sectionName] = { total: 0, correct: 0 };
+        }
+        sectionStats[sectionName].total += 1;
+        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+        if (selected && Number(selected.value) === q.answer) {
+          sectionStats[sectionName].correct += 1;
+        }
+      });
+
+      sectionBreakdownEl.innerHTML = "<h4 style=\"margin:14px 0 8px;color:#1e1b4b;\">Section-wise Breakdown</h4>";
+      Object.keys(sectionStats).forEach((name) => {
+        const s = sectionStats[name];
+        const pct = s.total === 0 ? 0 : Math.round((s.correct / s.total) * 100);
+        const row = document.createElement("div");
+        row.className = "section-row";
+        row.innerHTML = `<span><strong>${name}</strong></span><span>${s.correct}/${s.total} (${pct}%)</span>`;
+        sectionBreakdownEl.appendChild(row);
+      });
+
+      hasSubmitted = true;
+      stopTimer();
+      if (autoSubmitted) {
+        timerHintEl.textContent = "Time over. Score has been auto-submitted.";
+      }
+      updateStats();
+      summaryCard.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function showAnswers() {
+      if (!answersBox || !answerList) {
+        return;
+      }
+      answerList.innerHTML = "";
+      activeQuestions.forEach((q, index) => {
+        const item = document.createElement("li");
+        item.textContent = `Q${index + 1}: ${cleanQuestionText(q.question)} -> ${q.options[q.answer]}`;
+        answerList.appendChild(item);
+      });
+      answersBox.style.display = "block";
+    }
+
+    function resetQuiz() {
+      quizForm.reset();
+      result.textContent = "";
+      result.className = "";
+      if (answersBox) answersBox.style.display = "none";
+      if (answerList) answerList.innerHTML = "";
+      summaryCard.style.display = "none";
+      summaryMessageEl.textContent = "";
+      sectionBreakdownEl.innerHTML = "";
+
+      quizForm.querySelectorAll(".option-label").forEach((label) => {
+        label.classList.remove("correct", "wrong", "disabled");
+        const tag = label.querySelector(".tag");
+        if (tag) {
+          tag.remove();
+        }
+        const input = label.querySelector("input");
+        if (input) {
+          input.disabled = false;
+        }
+      });
+
+      quizForm.querySelectorAll(".feedback").forEach((node) => {
+        node.textContent = "";
+        node.className = "feedback";
+      });
+
+      hasSubmitted = false;
+      updateStats();
+    }
+
+    function requestSubmit() {
+      if (hasSubmitted) {
+        return;
+      }
+      const unanswered = activeQuestions.reduce((count, _, index) => {
+        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+        return count + (selected ? 0 : 1);
+      }, 0);
+      confirmMessage.textContent = unanswered > 0
+        ? `You have ${unanswered} unanswered question${unanswered === 1 ? "" : "s"}. Submit anyway?`
+        : `All ${activeQuestions.length} questions answered. Submit now?`;
+      confirmModal.classList.add("show");
+    }
+
+    function closeConfirm() {
+      confirmModal.classList.remove("show");
+    }
+
+    function showQuizTab() {
+      quizTab.classList.add("active");
+      codingTab.classList.remove("active");
+      quizTabBtn.classList.add("active");
+      codingTabBtn.classList.remove("active");
+      if (isMockMode && !hasSubmitted) {
+        resumeTimer();
+      }
+    }
+
+    function showCodingTab() {
+      codingTab.classList.add("active");
+      quizTab.classList.remove("active");
+      codingTabBtn.classList.add("active");
+      quizTabBtn.classList.remove("active");
+      if (isMockMode && !hasSubmitted) {
+        pauseTimer();
+      }
+    }
+
+    document.getElementById("submitBtn").addEventListener("click", requestSubmit);
+    document.getElementById("resetBtn").addEventListener("click", resetQuiz);
+    confirmCancel.addEventListener("click", closeConfirm);
+    confirmSubmit.addEventListener("click", () => {
+      closeConfirm();
+      calculateScore(false);
+    });
+    retryMockBtn.addEventListener("click", () => {
+      summaryCard.style.display = "none";
+      startMockTest();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+    practiceAfterBtn.addEventListener("click", () => {
+      summaryCard.style.display = "none";
+      startPracticeAll();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+    quizTabBtn.addEventListener("click", showQuizTab);
+    codingTabBtn.addEventListener("click", showCodingTab);
+    startMockBtn.addEventListener("click", startMockTest);
+    practiceAllBtn.addEventListener("click", startPracticeAll);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("blur", handleVisibilityChange);
+    window.addEventListener("focus", handleVisibilityChange);
+
+    startMockTest();
+  </script>
+</body>
+</html>
